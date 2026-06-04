@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>FORGE · Reminder Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/tabler-icons.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--color-background-tertiary); color: var(--color-text-primary); line-height: 1.6; }
+    
+    :root {
+      --color-background-primary: #ffffff;
+      --color-background-secondary: #f8f8f8;
+      --color-background-tertiary: #f0f0f0;
+      --color-text-primary: #1a1a1a;
+      --color-text-secondary: #666666;
+      --color-text-tertiary: #999999;
+      --color-border-tertiary: rgba(0,0,0,0.08);
+      --color-border-secondary: rgba(0,0,0,0.15);
+      --color-border-primary: rgba(0,0,0,0.25);
+      --color-background-info: #e6f1fb;
+      --color-text-info: #185fa5;
+      --color-background-success: #eaf3de;
+      --color-text-success: #3b6d11;
+      --color-background-warning: #faeeda;
+      --color-text-warning: #854f0b;
+      --border-radius-md: 8px;
+      --border-radius-lg: 12px;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-background-primary: #1a1a1a;
+        --color-background-secondary: #2a2a2a;
+        --color-background-tertiary: #0f0f0f;
+        --color-text-primary: #ffffff;
+        --color-text-secondary: #b0b0b0;
+        --color-text-tertiary: #808080;
+        --color-border-tertiary: rgba(255,255,255,0.08);
+        --color-border-secondary: rgba(255,255,255,0.15);
+        --color-border-primary: rgba(255,255,255,0.25);
+        --color-background-info: #0c447c;
+        --color-text-info: #85b7eb;
+        --color-background-success: #27500a;
+        --color-text-success: #97c459;
+        --color-background-warning: #633806;
+        --color-text-warning: #ef9f27;
+      }
+    }
+    
+    .container { max-width: 100%; padding: 0; background: var(--color-background-primary); min-height: 100vh; }
+    .header { background: var(--color-background-primary); border-bottom: 0.5px solid var(--color-border-tertiary); padding: 1rem; position: sticky; top: 0; z-index: 10; }
+    .header h1 { font-size: 18px; font-weight: 500; margin-bottom: 1rem; letter-spacing: -0.5px; }
+    
+    .tabs { display: flex; gap: 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+    .tab-button { flex: 1; padding: 12px; text-align: center; background: none; border: none; font-size: 14px; font-weight: 500; color: var(--color-text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.15s; }
+    .tab-button.active { color: var(--color-text-primary); border-bottom-color: var(--color-text-primary); }
+    .tab-button:hover { color: var(--color-text-primary); }
+    
+    .content { padding: 1rem; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    
+    .reminder-item { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px 12px; margin-bottom: 12px; display: flex; gap: 12px; align-items: flex-start; }
+    .reminder-item.completed { opacity: 0.6; }
+    .reminder-item.completed .reminder-text { text-decoration: line-through; }
+    
+    .reminder-checkbox { width: 20px; height: 20px; border: 0.5px solid var(--color-border-secondary); border-radius: 4px; cursor: pointer; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--color-text-success); }
+    .reminder-checkbox:hover { border-color: var(--color-border-primary); }
+    .reminder-item.completed .reminder-checkbox { background: var(--color-background-success); border-color: var(--color-text-success); }
+    
+    .reminder-body { flex: 1; min-width: 0; }
+    .reminder-text { font-size: 14px; word-break: break-word; margin-bottom: 6px; }
+    .reminder-controls { display: flex; gap: 6px; flex-wrap: wrap; }
+    .freq-badge { font-size: 11px; padding: 4px 8px; background: var(--color-background-info); color: var(--color-text-info); border-radius: 4px; cursor: pointer; border: 0.5px solid var(--color-border-tertiary); transition: all 0.15s; }
+    .freq-badge:hover { border-color: var(--color-border-secondary); }
+    .freq-badge.active { background: var(--color-text-info); color: var(--color-background-info); }
+    
+    .delete-btn { width: 28px; height: 28px; background: none; border: 0.5px solid var(--color-border-tertiary); border-radius: 4px; cursor: pointer; color: var(--color-text-secondary); display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.15s; flex-shrink: 0; }
+    .delete-btn:hover { border-color: #e24b4a; color: #e24b4a; }
+    
+    .input-group { margin-bottom: 1rem; }
+    .input-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--color-text-secondary); }
+    input[type="text"], input[type="password"], textarea { width: 100%; padding: 10px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); font-size: 14px; font-family: inherit; }
+    input:hover, textarea:hover { border-color: var(--color-border-primary); }
+    input:focus, textarea:focus { outline: none; border-color: var(--color-text-info); }
+    
+    textarea { resize: vertical; min-height: 100px; font-family: var(--font-mono, monospace); }
+    
+    .button { padding: 10px 16px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-primary); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+    .button:hover { background: var(--color-background-tertiary); border-color: var(--color-border-primary); }
+    .button:active { transform: scale(0.98); }
+    
+    .button.primary { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-tertiary); }
+    .button.primary:hover { background: #d6e8f7; }
+    
+    .status-msg { padding: 12px; border-radius: var(--border-radius-md); font-size: 13px; margin: 12px 0; word-break: break-word; }
+    .status-msg.success { background: var(--color-background-success); color: var(--color-text-success); }
+    .status-msg.error { background: #fcebeb; color: #a32d2d; }
+    .status-msg.info { background: var(--color-background-info); color: var(--color-text-info); }
+    .status-msg.loading { background: var(--color-background-warning); color: var(--color-text-warning); }
+    
+    .empty-state { text-align: center; padding: 2rem 1rem; color: var(--color-text-secondary); }
+    .empty-state p { font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>⬡ FORGE · Reminder Engine</h1>
+      <div class="tabs">
+        <button class="tab-button active" data-tab="today">Today</button>
+        <button class="tab-button" data-tab="library">Library</button>
+        <button class="tab-button" data-tab="settings">Settings</button>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div id="today" class="tab-panel active">
+        <div id="today-list"></div>
+      </div>
+      
+      <div id="library" class="tab-panel">
+        <div id="library-list"></div>
+      </div>
+      
+      <div id="settings" class="tab-panel">
+        <div class="input-group">
+          <label>Jsonbin Master Key</label>
+          <input type="password" id="master-key" placeholder="Paste your jsonbin master key here">
+          <p style="font-size: 12px; color: var(--color-text-tertiary); margin-top: 6px;">Your key is stored locally in your browser. It never leaves your device.</p>
+        </div>
+        
+        <button class="button primary" onclick="saveSettings()">Save & Sync from Jsonbin</button>
+        
+        <div id="sync-status" style="margin-top: 1rem;"></div>
+        
+        <div style="border-top: 0.5px solid var(--color-border-tertiary); margin-top: 2rem; padding-top: 1.5rem;">
+          <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 12px;">Paste Reminders</h3>
+          <textarea id="paste-reminders" placeholder="Paste your reminders here (one per line, no bullets needed)"></textarea>
+          <button class="button" onclick="importReminders()" style="margin-top: 12px;">Add Pasted Reminders</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const JSONBIN_BIN_ID = '6a1f705cda38895dfe7e4f97';
+    const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+    
+    let reminders = [];
+    let todaySelection = [];
+    
+    function loadFromStorage() {
+      const stored = localStorage.getItem('forge-reminders');
+      reminders = stored ? JSON.parse(stored) : [];
+      const todayStored = localStorage.getItem('forge-today');
+      todaySelection = todayStored ? JSON.parse(todayStored) : [];
+    }
+    
+    function saveToStorage() {
+      localStorage.setItem('forge-reminders', JSON.stringify(reminders));
+      localStorage.setItem('forge-today', JSON.stringify(todaySelection));
+    }
+    
+    function getMasterKey() {
+      return localStorage.getItem('forge-master-key');
+    }
+    
+    async function syncToJsonbin() {
+      const key = getMasterKey();
+      if (!key) {
+        console.log('No master key set, skipping sync');
+        return;
+      }
+      
+      try {
+        const response = await fetch(JSONBIN_URL, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key': key
+          },
+          body: JSON.stringify({ reminders, todaySelection, lastSync: new Date().toISOString() })
+        });
+        
+        if (!response.ok) throw new Error(`Sync failed: ${response.status}`);
+      } catch (err) {
+        console.error('Jsonbin sync error:', err);
+      }
+    }
+    
+    async function syncFromJsonbin() {
+      const key = getMasterKey();
+      if (!key) {
+        showStatus('No master key set', 'error');
+        return false;
+      }
+      
+      try {
+        showStatus('Connecting to jsonbin...', 'loading');
+        
+        const response = await fetch(JSONBIN_URL, {
+          method: 'GET',
+          headers: { 'X-Master-Key': key }
+        });
+        
+        console.log(`Fetch response status: ${response.status}`);
+        
+        if (response.status === 401 || response.status === 403) {
+          showStatus('Auth failed: your master key is incorrect or expired', 'error');
+          return false;
+        }
+        
+        if (!response.ok) {
+          showStatus(`Server error: ${response.status} ${response.statusText}`, 'error');
+          return false;
+        }
+        
+        const data = await response.json();
+        console.log('Jsonbin data loaded:', data);
+        
+        reminders = data.record?.reminders || [];
+        todaySelection = data.record?.todaySelection || [];
+        saveToStorage();
+        
+        showStatus(`Synced ✓ — ${reminders.length} reminders loaded`, 'success');
+        renderAll();
+        return true;
+      } catch (err) {
+        console.error('Sync error:', err);
+        showStatus(`Error: ${err.message}`, 'error');
+        return false;
+      }
+    }
+    
+    function saveSettings() {
+      const key = document.getElementById('master-key').value.trim();
+      if (!key) {
+        showStatus('Enter your master key', 'error');
+        return;
+      }
+      localStorage.setItem('forge-master-key', key);
+      showStatus('Key saved, syncing...', 'loading');
+      syncFromJsonbin();
+    }
+    
+    function showStatus(msg, type) {
+      const el = document.getElementById('sync-status');
+      el.innerHTML = `<div class="status-msg ${type}">${msg}</div>`;
+      console.log(`[${type.toUpperCase()}] ${msg}`);
+    }
+    
+    function importReminders() {
+      const text = document.getElementById('paste-reminders').value.trim();
+      if (!text) return;
+      
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+      const newIds = [];
+      
+      lines.forEach(line => {
+        const id = `reminder-${Date.now()}-${Math.random()}`;
+        reminders.push({
+          id,
+          text: line.replace(/^[-•*]\s*/, ''),
+          frequency: 'Rotation',
+          completed: false,
+          addedAt: new Date().toISOString()
+        });
+        newIds.push(id);
+      });
+      
+      saveToStorage();
+      syncToJsonbin();
+      document.getElementById('paste-reminders').value = '';
+      showStatus(`Added ${newIds.length} reminders`, 'success');
+      renderAll();
+    }
+    
+    function toggleReminder(id) {
+      const reminder = reminders.find(r => r.id === id);
+      if (reminder) {
+        reminder.completed = !reminder.completed;
+        saveToStorage();
+        syncToJsonbin();
+        renderAll();
+      }
+    }
+    
+    function setFrequency(id, freq) {
+      const reminder = reminders.find(r => r.id === id);
+      if (reminder) {
+        reminder.frequency = reminder.frequency === freq ? 'Rotation' : freq;
+        saveToStorage();
+        syncToJsonbin();
+        renderAll();
+      }
+    }
+    
+    function deleteReminder(id) {
+      reminders = reminders.filter(r => r.id !== id);
+      todaySelection = todaySelection.filter(i => i !== id);
+      saveToStorage();
+      syncToJsonbin();
+      renderAll();
+    }
+    
+    function renderReminder(reminder, isToday = false) {
+      const freqs = ['Daily', 'Often', 'Weekly', 'Rotation'];
+      return `
+        <div class="reminder-item ${reminder.completed ? 'completed' : ''}">
+          <div class="reminder-checkbox" onclick="toggleReminder('${reminder.id}')">
+            ${reminder.completed ? '✓' : ''}
+          </div>
+          <div class="reminder-body">
+            <div class="reminder-text">${escapeHtml(reminder.text)}</div>
+            <div class="reminder-controls">
+              ${freqs.map(f => `
+                <button class="freq-badge ${reminder.frequency === f ? 'active' : ''}" onclick="setFrequency('${reminder.id}', '${f}')">${f}</button>
+              `).join('')}
+            </div>
+          </div>
+          <button class="delete-btn" onclick="deleteReminder('${reminder.id}')">✕</button>
+        </div>
+      `;
+    }
+    
+    function renderToday() {
+      const el = document.getElementById('today-list');
+      const dailyReminders = reminders.filter(r => r.frequency === 'Daily' && !r.completed);
+      const oftenReminders = reminders.filter(r => r.frequency === 'Often' && !r.completed);
+      const weeklyReminders = reminders.filter(r => r.frequency === 'Weekly' && !r.completed);
+      
+      const todayReminders = [...dailyReminders, ...oftenReminders.slice(0, 2), ...weeklyReminders.slice(0, 1)];
+      
+      if (todayReminders.length === 0) {
+        el.innerHTML = '<div class="empty-state"><p>No reminders for today</p></div>';
+        return;
+      }
+      
+      el.innerHTML = todayReminders.map(r => renderReminder(r, true)).join('');
+    }
+    
+    function renderLibrary() {
+      const el = document.getElementById('library-list');
+      const active = reminders.filter(r => !r.completed);
+      
+      if (active.length === 0) {
+        el.innerHTML = '<div class="empty-state"><p>No active reminders</p></div>';
+        return;
+      }
+      
+      el.innerHTML = active.map(r => renderReminder(r, false)).join('');
+    }
+    
+    function renderAll() {
+      renderToday();
+      renderLibrary();
+    }
+    
+    function escapeHtml(text) {
+      const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+    
+    document.querySelectorAll('.tab-button').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        e.target.classList.add('active');
+        const tabId = e.target.dataset.tab;
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+    
+    const keyInput = document.getElementById('master-key');
+    const stored = localStorage.getItem('forge-master-key');
+    if (stored) {
+      keyInput.value = stored;
+    }
+    
+    loadFromStorage();
+    renderAll();
+  </script>
+</body>
+</html>
