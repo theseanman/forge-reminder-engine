@@ -226,11 +226,25 @@
         const data = await response.json();
         console.log('Jsonbin data loaded:', data);
         
-        reminders = data.record?.reminders || [];
+        const existingReminders = data.record?.reminders || [];
+        const weekString = data.record?.week || '';
+        if (existingReminders.length > 0) {
+          reminders = existingReminders;
+        } else if (weekString) {
+          const lines = weekString.split('\n').map(l => l.trim()).filter(l => l);
+          reminders = lines.map(line => ({
+            id: 'reminder-' + Date.now() + '-' + Math.random(),
+            text: line.replace(/^[-•*]\s*/, ''),
+            frequency: 'Rotation',
+            completed: false,
+            addedAt: new Date().toISOString()
+          }));
+        } else {
+          reminders = [];
+        }
         todaySelection = data.record?.todaySelection || [];
         saveToStorage();
-        
-        showStatus(`Synced ✓ — ${reminders.length} reminders loaded`, 'success');
+        showStatus('Synced ✓ — ' + reminders.length + ' reminders loaded', 'success');
         renderAll();
         return true;
       } catch (err) {
