@@ -1,406 +1,257 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>FORGE · Reminder Engine</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/tabler-icons.min.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--color-background-tertiary); color: var(--color-text-primary); line-height: 1.6; }
-    
-    :root {
-      --color-background-primary: #ffffff;
-      --color-background-secondary: #f8f8f8;
-      --color-background-tertiary: #f0f0f0;
-      --color-text-primary: #1a1a1a;
-      --color-text-secondary: #666666;
-      --color-text-tertiary: #999999;
-      --color-border-tertiary: rgba(0,0,0,0.08);
-      --color-border-secondary: rgba(0,0,0,0.15);
-      --color-border-primary: rgba(0,0,0,0.25);
-      --color-background-info: #e6f1fb;
-      --color-text-info: #185fa5;
-      --color-background-success: #eaf3de;
-      --color-text-success: #3b6d11;
-      --color-background-warning: #faeeda;
-      --color-text-warning: #854f0b;
-      --border-radius-md: 8px;
-      --border-radius-lg: 12px;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --color-background-primary: #1a1a1a;
-        --color-background-secondary: #2a2a2a;
-        --color-background-tertiary: #0f0f0f;
-        --color-text-primary: #ffffff;
-        --color-text-secondary: #b0b0b0;
-        --color-text-tertiary: #808080;
-        --color-border-tertiary: rgba(255,255,255,0.08);
-        --color-border-secondary: rgba(255,255,255,0.15);
-        --color-border-primary: rgba(255,255,255,0.25);
-        --color-background-info: #0c447c;
-        --color-text-info: #85b7eb;
-        --color-background-success: #27500a;
-        --color-text-success: #97c459;
-        --color-background-warning: #633806;
-        --color-text-warning: #ef9f27;
-      }
-    }
-    
-    .container { max-width: 100%; padding: 0; background: var(--color-background-primary); min-height: 100vh; }
-    .header { background: var(--color-background-primary); border-bottom: 0.5px solid var(--color-border-tertiary); padding: 1rem; position: sticky; top: 0; z-index: 10; }
-    .header h1 { font-size: 18px; font-weight: 500; margin-bottom: 1rem; letter-spacing: -0.5px; }
-    
-    .tabs { display: flex; gap: 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
-    .tab-button { flex: 1; padding: 12px; text-align: center; background: none; border: none; font-size: 14px; font-weight: 500; color: var(--color-text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.15s; }
-    .tab-button.active { color: var(--color-text-primary); border-bottom-color: var(--color-text-primary); }
-    .tab-button:hover { color: var(--color-text-primary); }
-    
-    .content { padding: 1rem; }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-    
-    .reminder-item { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px 12px; margin-bottom: 12px; display: flex; gap: 12px; align-items: flex-start; }
-    .reminder-item.completed { opacity: 0.6; }
-    .reminder-item.completed .reminder-text { text-decoration: line-through; }
-    
-    .reminder-checkbox { width: 20px; height: 20px; border: 0.5px solid var(--color-border-secondary); border-radius: 4px; cursor: pointer; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--color-text-success); }
-    .reminder-checkbox:hover { border-color: var(--color-border-primary); }
-    .reminder-item.completed .reminder-checkbox { background: var(--color-background-success); border-color: var(--color-text-success); }
-    
-    .reminder-body { flex: 1; min-width: 0; }
-    .reminder-text { font-size: 14px; word-break: break-word; margin-bottom: 6px; }
-    .reminder-controls { display: flex; gap: 6px; flex-wrap: wrap; }
-    .freq-badge { font-size: 11px; padding: 4px 8px; background: var(--color-background-info); color: var(--color-text-info); border-radius: 4px; cursor: pointer; border: 0.5px solid var(--color-border-tertiary); transition: all 0.15s; }
-    .freq-badge:hover { border-color: var(--color-border-secondary); }
-    .freq-badge.active { background: var(--color-text-info); color: var(--color-background-info); }
-    
-    .delete-btn { width: 28px; height: 28px; background: none; border: 0.5px solid var(--color-border-tertiary); border-radius: 4px; cursor: pointer; color: var(--color-text-secondary); display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.15s; flex-shrink: 0; }
-    .delete-btn:hover { border-color: #e24b4a; color: #e24b4a; }
-    
-    .input-group { margin-bottom: 1rem; }
-    .input-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--color-text-secondary); }
-    input[type="text"], input[type="password"], textarea { width: 100%; padding: 10px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); font-size: 14px; font-family: inherit; }
-    input:hover, textarea:hover { border-color: var(--color-border-primary); }
-    input:focus, textarea:focus { outline: none; border-color: var(--color-text-info); }
-    
-    textarea { resize: vertical; min-height: 100px; font-family: var(--font-mono, monospace); }
-    
-    .button { padding: 10px 16px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-primary); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
-    .button:hover { background: var(--color-background-tertiary); border-color: var(--color-border-primary); }
-    .button:active { transform: scale(0.98); }
-    
-    .button.primary { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-tertiary); }
-    .button.primary:hover { background: #d6e8f7; }
-    
-    .status-msg { padding: 12px; border-radius: var(--border-radius-md); font-size: 13px; margin: 12px 0; word-break: break-word; }
-    .status-msg.success { background: var(--color-background-success); color: var(--color-text-success); }
-    .status-msg.error { background: #fcebeb; color: #a32d2d; }
-    .status-msg.info { background: var(--color-background-info); color: var(--color-text-info); }
-    .status-msg.loading { background: var(--color-background-warning); color: var(--color-text-warning); }
-    
-    .empty-state { text-align: center; padding: 2rem 1rem; color: var(--color-text-secondary); }
-    .empty-state p { font-size: 14px; }
-  </style>
+<!-- saved from url=(0071)file:///Users/sreid/Downloads/FORGE%20Complete%20Brief%20June6%202.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORGE OS · Complete Morning Brief</title>
+<link rel="stylesheet" href="./FORGE OS · Complete Morning Brief_files/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #0d0a10; --surface: #161220; --border: #2a2535; --dim: #3a384a;
+    --accent: #f5a849; --accent-dim: #c47d20; --red: #e85454; --green: #4ae8a0;
+    --orange: #f49a4a; --blue: #4a9de8; --purple: #9b4ae8;
+    --text: #f2f0f8; --muted: #7a788a;
+    --radius: 8px; --radius-lg: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Mono', 'Courier New', monospace; min-height: 100vh; }
+  .shell { max-width: 500px; margin: 0 auto; padding: 20px 16px 80px; }
+  .topbar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+  .forge-label { font-size: 11px; letter-spacing: 0.25em; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+  .forge-sub { font-size: 10px; color: var(--muted); margin-top: 4px; }
+  .date-block { text-align: right; }
+  .date-main { font-size: 13px; color: var(--text); font-weight: 600; }
+  .date-time { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; margin-bottom: 10px; }
+  .card-header { font-size: 9px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .card-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .stat-block { background: var(--bg); border: 1px solid var(--dim); border-radius: var(--radius); padding: 10px 8px; text-align: center; }
+  .stat-val { font-size: 18px; font-weight: 700; line-height: 1; }
+  .stat-label { font-size: 8px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
+  .stat-sub { font-size: 8px; margin-top: 3px; font-weight: 600; }
+  .insight { font-size: 10px; color: var(--muted); line-height: 1.6; border-left: 2px solid var(--orange); padding-left: 10px; margin-top: 10px; }
+  .tag { font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 4px; padding: 3px 6px; font-weight: 600; display: inline-block; margin-right: 4px; margin-bottom: 4px; }
+  .divider { height: 1px; background: var(--border); margin: 10px 0; }
+  .task-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--dim); }
+  .task-item:last-child { border-bottom: none; }
+  .task-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+  .task-text { font-size: 10px; color: var(--text); line-height: 1.4; flex: 1; }
+  .task-meta { font-size: 8px; color: var(--muted); margin-top: 2px; }
+  .motd-box { background: linear-gradient(135deg, rgba(245,168,73,0.1), rgba(155,74,232,0.08)); border: 1px solid rgba(245,168,73,0.25); border-radius: var(--radius-lg); padding: 12px 14px; margin-bottom: 10px; }
+  .motd-text { font-size: 12px; color: var(--text); line-height: 1.5; font-style: italic; }
+  .motd-source { font-size: 9px; color: var(--accent-dim); margin-top: 4px; }
+  .alert-banner { background: rgba(244,154,74,0.12); border: 1px solid rgba(244,154,74,0.3); border-radius: var(--radius); padding: 10px 12px; font-size: 10px; color: var(--orange); margin-bottom: 10px; line-height: 1.4; }
+  .section-label { font-size: 8px; letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; margin-top: 12px; }
+  .mini-card { background: var(--bg); border: 1px solid var(--dim); border-radius: var(--radius); padding: 10px; margin-bottom: 8px; }
+  .mini-title { font-size: 9px; color: var(--text); font-weight: 700; margin-bottom: 4px; }
+  .mini-detail { font-size: 9px; color: var(--muted); line-height: 1.4; }
+  .footer { text-align: center; margin-top: 20px; font-size: 8px; color: var(--dim); letter-spacing: 0.15em; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>⬡ FORGE · Reminder Engine</h1>
-      <div class="tabs">
-        <button class="tab-button active" data-tab="today">Today</button>
-        <button class="tab-button" data-tab="library">Library</button>
-        <button class="tab-button" data-tab="settings">Settings</button>
-      </div>
+<div class="shell">
+
+  <div class="topbar">
+    <div>
+      <div class="forge-label">⬡ FORGE OS</div>
+      <div class="forge-sub">Complete Brief</div>
     </div>
-    
-    <div class="content">
-      <div id="today" class="tab-panel active">
-        <div id="today-list"></div>
-      </div>
-      
-      <div id="library" class="tab-panel">
-        <div id="library-list"></div>
-      </div>
-      
-      <div id="settings" class="tab-panel">
-        <div class="input-group">
-          <label>Jsonbin Master Key</label>
-          <input type="password" id="master-key" placeholder="Paste your jsonbin master key here">
-          <p style="font-size: 12px; color: var(--color-text-tertiary); margin-top: 6px;">Your key is stored locally in your browser. It never leaves your device.</p>
-        </div>
-        
-        <button class="button primary" onclick="saveSettings()">Save & Sync from Jsonbin</button>
-        
-        <div id="sync-status" style="margin-top: 1rem;"></div>
-        
-        <div style="border-top: 0.5px solid var(--color-border-tertiary); margin-top: 2rem; padding-top: 1.5rem;">
-          <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 12px;">Paste Reminders</h3>
-          <textarea id="paste-reminders" placeholder="Paste your reminders here (one per line, no bullets needed)"></textarea>
-          <button class="button" onclick="importReminders()" style="margin-top: 12px;">Add Pasted Reminders</button>
-        </div>
-      </div>
+    <div class="date-block">
+      <div class="date-main" id="day-name">Saturday</div>
+      <div style="font-size:10px; color:var(--muted);">June 6, 2026</div>
+      <div class="date-time" id="live-clock">01:03 PM</div>
     </div>
   </div>
 
-  <script>
-    const JSONBIN_BIN_ID = '6a1f705cda38895dfe7e4f97';
-    const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
-    
-    let reminders = [];
-    let todaySelection = [];
-    
-    function loadFromStorage() {
-      const stored = localStorage.getItem('forge-reminders');
-      reminders = stored ? JSON.parse(stored) : [];
-      const todayStored = localStorage.getItem('forge-today');
-      todaySelection = todayStored ? JSON.parse(todayStored) : [];
-    }
-    
-    function saveToStorage() {
-      localStorage.setItem('forge-reminders', JSON.stringify(reminders));
-      localStorage.setItem('forge-today', JSON.stringify(todaySelection));
-    }
-    
-    function getMasterKey() {
-      return localStorage.getItem('forge-master-key');
-    }
-    
-    async function syncToJsonbin() {
-      const key = getMasterKey();
-      if (!key) {
-        console.log('No master key set, skipping sync');
-        return;
-      }
-      
-      try {
-        const response = await fetch(JSONBIN_URL, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Master-Key': key
-          },
-          body: JSON.stringify({ reminders, todaySelection, lastSync: new Date().toISOString() })
-        });
-        
-        if (!response.ok) throw new Error(`Sync failed: ${response.status}`);
-      } catch (err) {
-        console.error('Jsonbin sync error:', err);
-      }
-    }
-    
-    async function syncFromJsonbin() {
-      const key = getMasterKey();
-      if (!key) {
-        showStatus('No master key set', 'error');
-        return false;
-      }
-      
-      try {
-        showStatus('Connecting to jsonbin...', 'loading');
-        
-        const response = await fetch(JSONBIN_URL, {
-          method: 'GET',
-          headers: { 'X-Master-Key': key }
-        });
-        
-        console.log(`Fetch response status: ${response.status}`);
-        
-        if (response.status === 401 || response.status === 403) {
-          showStatus('Auth failed: your master key is incorrect or expired', 'error');
-          return false;
-        }
-        
-        if (!response.ok) {
-          showStatus(`Server error: ${response.status} ${response.statusText}`, 'error');
-          return false;
-        }
-        
-        const data = await response.json();
-        console.log('Jsonbin data loaded:', data);
-        
-        const existingReminders = data.record?.reminders || [];
-        const weekString = data.record?.week || '';
-        if (existingReminders.length > 0) {
-          reminders = existingReminders;
-        } else if (weekString) {
-          const lines = weekString.split('\n').map(l => l.trim()).filter(l => l);
-          reminders = lines.map(line => ({
-            id: 'reminder-' + Date.now() + '-' + Math.random(),
-            text: line.replace(/^[-•*]\s*/, ''),
-            frequency: 'Rotation',
-            completed: false,
-            addedAt: new Date().toISOString()
-          }));
-        } else {
-          reminders = [];
-        }
-        todaySelection = data.record?.todaySelection || [];
-        saveToStorage();
-        showStatus('Synced ✓ — ' + reminders.length + ' reminders loaded', 'success');
-        renderAll();
-        return true;
-      } catch (err) {
-        console.error('Sync error:', err);
-        showStatus(`Error: ${err.message}`, 'error');
-        return false;
-      }
-    }
-    
-    function saveSettings() {
-      const key = document.getElementById('master-key').value.trim();
-      if (!key) {
-        showStatus('Enter your master key', 'error');
-        return;
-      }
-      localStorage.setItem('forge-master-key', key);
-      showStatus('Key saved, syncing...', 'loading');
-      syncFromJsonbin();
-    }
-    
-    function showStatus(msg, type) {
-      const el = document.getElementById('sync-status');
-      el.innerHTML = `<div class="status-msg ${type}">${msg}</div>`;
-      console.log(`[${type.toUpperCase()}] ${msg}`);
-    }
-    
-    function importReminders() {
-      const text = document.getElementById('paste-reminders').value.trim();
-      if (!text) return;
-      
-      const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-      const newIds = [];
-      
-      lines.forEach(line => {
-        const id = `reminder-${Date.now()}-${Math.random()}`;
-        reminders.push({
-          id,
-          text: line.replace(/^[-•*]\s*/, ''),
-          frequency: 'Rotation',
-          completed: false,
-          addedAt: new Date().toISOString()
-        });
-        newIds.push(id);
-      });
-      
-      saveToStorage();
-      syncToJsonbin();
-      document.getElementById('paste-reminders').value = '';
-      showStatus(`Added ${newIds.length} reminders`, 'success');
-      renderAll();
-    }
-    
-    function toggleReminder(id) {
-      const reminder = reminders.find(r => r.id === id);
-      if (reminder) {
-        reminder.completed = !reminder.completed;
-        saveToStorage();
-        syncToJsonbin();
-        renderAll();
-      }
-    }
-    
-    function setFrequency(id, freq) {
-      const reminder = reminders.find(r => r.id === id);
-      if (reminder) {
-        reminder.frequency = reminder.frequency === freq ? 'Rotation' : freq;
-        saveToStorage();
-        syncToJsonbin();
-        renderAll();
-      }
-    }
-    
-    function deleteReminder(id) {
-      reminders = reminders.filter(r => r.id !== id);
-      todaySelection = todaySelection.filter(i => i !== id);
-      saveToStorage();
-      syncToJsonbin();
-      renderAll();
-    }
-    
-    function renderReminder(reminder, isToday = false) {
-      const freqs = ['Daily', 'Often', 'Weekly', 'Rotation'];
-      return `
-        <div class="reminder-item ${reminder.completed ? 'completed' : ''}">
-          <div class="reminder-checkbox" onclick="toggleReminder('${reminder.id}')">
-            ${reminder.completed ? '✓' : ''}
-          </div>
-          <div class="reminder-body">
-            <div class="reminder-text">${escapeHtml(reminder.text)}</div>
-            <div class="reminder-controls">
-              ${freqs.map(f => `
-                <button class="freq-badge ${reminder.frequency === f ? 'active' : ''}" onclick="setFrequency('${reminder.id}', '${f}')">${f}</button>
-              `).join('')}
-            </div>
-          </div>
-          <button class="delete-btn" onclick="deleteReminder('${reminder.id}')">✕</button>
-        </div>
-      `;
-    }
-    
-    function renderToday() {
-      const el = document.getElementById('today-list');
-      const dailyReminders = reminders.filter(r => r.frequency === 'Daily' && !r.completed);
-      const oftenReminders = reminders.filter(r => r.frequency === 'Often' && !r.completed);
-      const weeklyReminders = reminders.filter(r => r.frequency === 'Weekly' && !r.completed);
-      
-      const todayReminders = [...dailyReminders, ...oftenReminders.slice(0, 2), ...weeklyReminders.slice(0, 1)];
-      
-      if (todayReminders.length === 0) {
-        el.innerHTML = '<div class="empty-state"><p>No reminders for today</p></div>';
-        return;
-      }
-      
-      el.innerHTML = todayReminders.map(r => renderReminder(r, true)).join('');
-    }
-    
-    function renderLibrary() {
-      const el = document.getElementById('library-list');
-      const active = reminders.filter(r => !r.completed);
-      
-      if (active.length === 0) {
-        el.innerHTML = '<div class="empty-state"><p>No active reminders</p></div>';
-        return;
-      }
-      
-      el.innerHTML = active.map(r => renderReminder(r, false)).join('');
-    }
-    
-    function renderAll() {
-      renderToday();
-      renderLibrary();
-    }
-    
-    function escapeHtml(text) {
-      const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
-      return text.replace(/[&<>"']/g, m => map[m]);
-    }
-    
-    document.querySelectorAll('.tab-button').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        e.target.classList.add('active');
-        const tabId = e.target.dataset.tab;
-        document.getElementById(tabId).classList.add('active');
-      });
-    });
-    
-    const keyInput = document.getElementById('master-key');
-    const stored = localStorage.getItem('forge-master-key');
-    if (stored) {
-      keyInput.value = stored;
-    }
-    
-    loadFromStorage();
-    renderAll();
-  </script>
-</body>
-</html>
+  <!-- QUOTE OF THE DAY -->
+  <div class="motd-box">
+    <div class="motd-text">"The obstacle is the way."</div>
+    <div class="motd-source">— Marcus Aurelius</div>
+  </div>
+
+  <!-- HRV STATUS -->
+  <div class="alert-banner">
+    ⚠️ Health vulnerable—recovery day. Rest, hydration, light movement only. No intensity.
+  </div>
+
+  <!-- WELLTORY CARD -->
+  <div class="card">
+    <div class="card-header">
+      <span><span class="card-dot" style="background:var(--red)"></span>Welltory HRV — 9:48 AM</span>
+      <span>98%★</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat-block"><div class="stat-val" style="color:var(--green);">40%</div><div class="stat-label">Stress</div><div class="stat-sub">Light</div></div>
+      <div class="stat-block"><div class="stat-val" style="color:var(--orange);">63%</div><div class="stat-label">Energy</div><div class="stat-sub">Average</div></div>
+      <div class="stat-block"><div class="stat-val" style="color:var(--red);">45%</div><div class="stat-label">Health</div><div class="stat-sub">Vulnerable</div></div>
+    </div>
+    <div class="insight">Sleep: 8h 7m, score 98%, HR range 51–77 bpm. Strong recovery but health dip signals rest day. Welltory: "Not every day is for breaking personal records—don't put too much on your plate."</div>
+  </div>
+
+  <!-- BODY COMPOSITION BASELINE -->
+  <div class="card">
+    <div class="card-header">
+      <span><span class="card-dot" style="background:var(--green)"></span>Body Composition — Day 4</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat-block"><div class="stat-val" style="color:var(--orange);">201.2</div><div class="stat-label">Weight</div><div class="stat-sub">+1.4 (H₂O)</div></div>
+      <div class="stat-block"><div class="stat-val" style="color:var(--green);">25.5%</div><div class="stat-label">Fat</div><div class="stat-sub">↓ 0.6%</div></div>
+      <div class="stat-block"><div class="stat-val" style="color:var(--blue);">135.0</div><div class="stat-label">Muscle</div><div class="stat-sub">Strong</div></div>
+    </div>
+    <div class="insight" style="border-left-color: var(--green);">Score 82. Target 195 lb (6.2 lb to lose). Skeletal muscle 39.5%. Body fat trending right direction—scale noise is water, not fat gain.</div>
+  </div>
+
+  <!-- WEATHER -->
+  <div class="card">
+    <div class="card-header">
+      <span><span class="card-dot" style="background:var(--dim)"></span>Richmond Weather</span>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">☁️ Mainly Cloudy · 40% Rain Risk</div>
+      <div class="mini-detail">10–16°C · E 20 km/h · Humidity 85% · Visibility 32 km</div>
+    </div>
+    <div class="insight" style="border-left-color: var(--dim); color: var(--muted);">Grey day → energy dip expected. Lean on protocols, avoid relying on external weather motivation. This is a *character day*—test the discipline when conditions don't inspire.</div>
+  </div>
+
+  <!-- SPORTS INTEL -->
+  <div class="card">
+    <div class="card-header">
+      <span><span class="card-dot" style="background:var(--blue)"></span>Sports Schedule</span>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">🏒 Stanley Cup Game 3 · Vegas @ Carolina</div>
+      <div class="mini-detail"><strong>Tonight · 5:00 PM PT (8 PM ET)</strong> · T-Mobile Arena, Las Vegas<br>Series tied 1–1 · ABC/SN/CBC broadcast</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">🏈 CFL Week 1 · Edmonton @ Ottawa</div>
+      <div class="mini-detail"><strong>Tonight · 4:00 PM PT (7 PM ET)</strong> · TD Place Stadium, Ottawa<br>CBSSN broadcast · Opening week matchup</div>
+    </div>
+    <div class="insight" style="border-left-color: var(--blue);">Vegas Game 3 on home ice—momentum shift. Edmonton @ Ottawa: early season CFL, high line-value potential. Short-week dynamics, QB uncertainty, travel factor. SBOS tracking.</div>
+  </div>
+
+  <!-- CONCERT TRACKER -->
+  <div class="card">
+    <div class="card-header">
+      <span><span class="card-dot" style="background:var(--purple)"></span>Upcoming Metal Shows</span>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">🎸 TONIGHT · Archspire "Long Roads Big Loads"</div>
+      <div class="mini-detail">Rickshaw Theatre, Vancouver · 6:00 PM<br>w/ Undeath, Crown Magnetar, Mutilation Barbecue</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">🎸 JUNE 14 · Napalm Death + Primitive Man</div>
+      <div class="mini-detail">The Pearl, Vancouver · Death metal legends</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">🎸 JUNE 25–27 · Anvil + Midnite Hellion</div>
+      <div class="mini-detail">El Corazon (Seattle 25th), Astoria (Vancouver 27th)</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">🎸 JULY 8 · Jinjer + Entheos + Crystal Lake</div>
+      <div class="mini-detail">Commodore Ballroom, Vancouver</div>
+    </div>
+  </div>
+
+  <!-- MUSIC DISCOVERY -->
+  <div class="card">
+    <div class="card-header">
+      <span><span class="card-dot" style="background:var(--orange)"></span>Music Discovery</span>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">🔊 ARCHSPIRE — "Too Fast to Die" (Apr 10, 2026)</div>
+      <div class="mini-detail">Technical death metal · Speed meets precision meets savagery. Vocalist Oliver Rae Aleron: "We're like a bit of meth in your cigarette." New drummer Spencer Moore, produced by Dave Otero. Five albums deep, still raising the bar. Available for vinyl/digital now.</div>
+    </div>
+  </div>
+
+  <!-- ART DISCOVERY -->
+  <div class="card">
+    <div class="card-header">
+      <span><span class="card-dot" style="background:var(--purple)"></span>Art of the Day</span>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">🎨 FRANCIS BACON — "Study" Series (1953+)</div>
+      <div class="mini-detail">Existentialist painter. Distorted figures, existential dread, fragmented identity. Themes: mortality, anxiety of being, the void between presence and absence. Bacon on his work: "I want to create the scream without painting the scream."</div>
+    </div>
+  </div>
+
+  <!-- JAPANESE WORD OF THE DAY -->
+  <div class="card">
+    <div class="card-header">
+      <span><span class="card-dot" style="background:var(--blue)"></span>日本語 — N2 Vocabulary</span>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">修行【しゅぎょう】</div>
+      <div class="mini-detail"><strong>Meaning:</strong> Training, discipline, ascetic practice<br><strong>Example:</strong> 毎日の修行を通じて、自分の限界を超える。<br><em>Mainichi no shugyō wo tsūjite, jibun no genkai wo koeru.</em><br>"Through daily discipline, one transcends one's limits."</div>
+    </div>
+  </div>
+
+  <!-- DAILY TIPS ROTATION -->
+  <div class="card">
+    <div class="card-header">
+      <span><span class="card-dot" style="background:var(--green)"></span>Daily Protocol Cards</span>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">⚔️ WARRIOR WISDOM</div>
+      <div class="mini-detail">Grey days test character. Fair weather discipline is not discipline. Today's conditions are not an excuse—they're the arena.</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">💰 FINANCIAL TIP</div>
+      <div class="mini-detail">Recovery day = lower spend day. No justification purchases on low-energy days. Discipline compounds—skip one impulse buy, reinvest the $40 toward your financial independence runway.</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">👨 GOOD FATHER OF THE DAY</div>
+      <div class="mini-detail">Present, not perfect. Today's energy is low—that's the cue to be *present* with daughters rather than trying to run them through intensity. Read, listen, be there. That's the win.</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-title">🧘 MINDFULNESS ANCHOR</div>
+      <div class="mini-detail">One breath at a time. When energy dips, the mind spirals. Anchor to breath—5 counts in, 7 counts out. Five rounds. Reset.</div>
+    </div>
+  </div>
+
+  <!-- TOP OF MIND TASKS -->
+  <div class="card">
+    <div class="card-header">
+      <span><span class="card-dot" style="background:var(--accent)"></span>TODAY'S PROTOCOL</span>
+    </div>
+    <div class="task-item">
+      <div class="task-dot" style="background:var(--accent)"></div>
+      <div><div class="task-text" style="color:var(--accent); font-weight:700;">FORGE GitHub Deploy</div><div class="task-meta">iPhone → Mac → GitHub Pages. Save URL to home screen.</div></div>
+    </div>
+    <div class="task-item">
+      <div class="task-dot" style="background:var(--red)"></div>
+      <div><div class="task-text" style="color:var(--red); font-weight:700;">Doug Fistmore Guard</div><div class="task-meta">16 jokes from June 5 → DOUG_FISTMORE_MASTER_JOKES.docx. Backup now.</div></div>
+    </div>
+    <div class="task-item">
+      <div class="task-dot" style="background:var(--blue)"></div>
+      <div><div class="task-text" style="color:var(--blue); font-weight:700;">MARK.ONE Next Build</div><div class="task-meta">Student profiles → Vercel deploy. Recovery day = good focus day (no HIIT interrupt).</div></div>
+    </div>
+    <div class="task-item">
+      <div class="task-dot" style="background:var(--green)"></div>
+      <div><div class="task-text" style="color:var(--green); font-weight:700;">Movement Protocol</div><div class="task-meta">Light only. Walk, mobility, yoga. Protect ankles. Zero HIIT today.</div></div>
+    </div>
+    <div class="task-item">
+      <div class="task-dot" style="background:var(--orange)"></div>
+      <div><div class="task-text" style="color:var(--orange); font-weight:700;">OPTIONAL: Stanley Cup Game 3</div><div class="task-meta">5 PM PT · Vegas vs Carolina · 5v5 hockey at its peak.</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    ⬡ FORGE OS · MORNING BRIEF · COMPLETE · SATURDAY, JUNE 6, 2026
+  </div>
+
+</div>
+
+<script>
+function initClock() {
+  const now = new Date();
+  document.getElementById('day-name').textContent = now.toLocaleDateString('en-US',{weekday:'long'});
+  setInterval(() => {
+    const t = new Date();
+    document.getElementById('live-clock').textContent = t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  }, 1000);
+}
+initClock();
+</script>
+
+</body></html>
