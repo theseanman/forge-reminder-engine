@@ -399,7 +399,7 @@ async function loadCalendar() {
   // Calendar data is expected under data.record.calendar (array of {time, title})
   // If not present, fall back to a helpful message
   try {
-    const masterKey = localStorage.getItem('forge_cal_key') || '';
+    const masterKey = localStorage.getItem('forge_cal_key') || '$2a$10$rs9Sak4dqIbcRvK1M.wAnOkEz1PsUKu.DqrastjCx2npbrJYr3r/2';
     if (!masterKey) {
       el.innerHTML = '<div class="cal-empty">No calendar key saved. Open FORGE Morning Brief on GitHub Pages to sync your calendar, or save your key in Settings.</div>';
       return;
