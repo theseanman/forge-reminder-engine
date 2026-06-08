@@ -7,81 +7,119 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
   :root {
-    --bg: #0a0a0f; --surface: #111118; --border: #1e1e2e; --dim: #33334a;
-    --accent: #e8c84a; --accent-dim: #a8902a; --red: #e85454; --green: #4ae8a0;
-    --orange: #e8844a; --blue: #4a9de8; --purple: #9b4ae8;
-    --text: #f0f0f8; --muted: #666680;
-    --radius: 8px; --radius-lg: 12px;
+    --bg: #0d1b2e;
+    --bg2: #112240;
+    --surface: #162d4a;
+    --border: #1e3a5f;
+    --dim: #2a4a6e;
+    --accent: #f5c842;
+    --accent-dim: #b8902a;
+    --red: #ff6b6b;
+    --green: #56e8a0;
+    --orange: #ff9a5c;
+    --blue: #5bb8ff;
+    --purple: #b57aff;
+    --text: #e8f4ff;
+    --muted: #7a9abf;
+    --radius: 10px;
+    --radius-lg: 16px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Mono', 'Courier New', monospace; min-height: 100vh; }
-  .shell { max-width: 480px; margin: 0 auto; padding: 20px 16px 60px; }
-  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
-  .forge-label { font-size: 11px; letter-spacing: 0.2em; color: var(--accent); font-weight: 700; text-transform: uppercase; }
-  .date-label { font-size: 12px; color: var(--muted); }
-  .progress-row { display: flex; gap: 6px; margin-bottom: 1.5rem; }
-  .pip { height: 4px; flex: 1; border-radius: 2px; background: var(--dim); transition: background 0.3s; }
+  body {
+    background: linear-gradient(175deg, #0d1b2e 0%, #112240 40%, #0e2237 70%, #0a1628 100%);
+    color: var(--text);
+    font-family: 'DM Mono', 'Courier New', monospace;
+    min-height: 100vh;
+  }
+  .shell { max-width: 500px; margin: 0 auto; padding: 24px 18px 80px; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.75rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border); }
+  .forge-label { font-size: 13px; letter-spacing: 0.18em; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+  .date-label { font-size: 13px; color: var(--muted); }
+  .progress-row { display: flex; gap: 7px; margin-bottom: 1.75rem; }
+  .pip { height: 5px; flex: 1; border-radius: 3px; background: var(--dim); transition: background 0.3s; }
   .pip.done { background: var(--green); }
   .pip.active { background: var(--blue); }
   .step { display: none; }
   .step.active { display: block; }
-  .step-header { font-size: 10px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 0.5rem; text-transform: uppercase; }
-  .step-title { font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; }
-  .step-sub { font-size: 13px; color: var(--muted); margin-bottom: 1.25rem; line-height: 1.5; }
+  .step-header { font-size: 11px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 0.6rem; text-transform: uppercase; }
+  .step-title { font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; line-height: 1.2; }
+  .step-sub { font-size: 15px; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
   textarea, input[type=text], input[type=number] {
     width: 100%; border-radius: var(--radius); border: 1px solid var(--border);
     background: var(--surface); color: var(--text); font-family: inherit;
-    font-size: 14px; padding: 10px 12px; resize: vertical;
+    font-size: 15px; padding: 12px 14px; resize: vertical;
   }
-  textarea { min-height: 80px; }
+  textarea { min-height: 88px; }
   textarea:focus, input:focus { outline: none; border-color: var(--blue); }
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0.75rem; }
-  .field-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; letter-spacing: 0.08em; }
-  .field { margin-bottom: 0.75rem; }
-  .btn-row { display: flex; gap: 8px; margin-top: 1rem; }
-  .btn { flex: 1; padding: 11px; border-radius: var(--radius); border: 1px solid var(--border); background: transparent; color: var(--text); font-size: 14px; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0.85rem; }
+  .field-label { font-size: 12px; color: var(--muted); margin-bottom: 5px; letter-spacing: 0.08em; }
+  .field { margin-bottom: 0.85rem; }
+  .btn-row { display: flex; gap: 8px; margin-top: 1.25rem; }
+  .btn { flex: 1; padding: 13px; border-radius: var(--radius); border: 1px solid var(--border); background: transparent; color: var(--text); font-size: 15px; cursor: pointer; font-family: inherit; transition: background 0.15s; }
   .btn:hover { background: var(--surface); }
-  .btn.primary { background: rgba(74,157,232,0.15); border-color: var(--blue); color: var(--blue); font-weight: 600; }
-  .btn.skip { color: var(--muted); border-color: var(--dim); font-size: 12px; flex: 0 0 auto; padding: 11px 16px; }
-  .mood-row { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
-  .mood-btn { border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 14px; background: transparent; color: var(--muted); font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
-  .mood-btn.selected { background: rgba(74,157,232,0.15); border-color: var(--blue); color: var(--blue); font-weight: 600; }
-  .todo-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid var(--dim); border-radius: var(--radius); margin-bottom: 8px; cursor: pointer; background: var(--surface); transition: all 0.15s; }
-  .todo-item.checked { background: rgba(74,232,160,0.1); border-color: var(--green); }
-  .todo-check { width: 18px; height: 18px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .btn.primary { background: rgba(91,184,255,0.18); border-color: var(--blue); color: var(--blue); font-weight: 700; }
+  .btn.skip { color: var(--muted); border-color: var(--dim); font-size: 13px; flex: 0 0 auto; padding: 13px 18px; }
+  .mood-row { display: flex; gap: 9px; margin-bottom: 1.1rem; flex-wrap: wrap; }
+  .mood-btn { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 16px; background: transparent; color: var(--muted); font-size: 15px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .mood-btn.selected { background: rgba(91,184,255,0.18); border-color: var(--blue); color: var(--blue); font-weight: 700; }
+  .todo-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border: 1px solid var(--dim); border-radius: var(--radius); margin-bottom: 9px; cursor: pointer; background: var(--surface); transition: all 0.15s; }
+  .todo-item.checked { background: rgba(86,232,160,0.1); border-color: var(--green); }
+  .todo-check { width: 20px; height: 20px; border: 1px solid var(--border); border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
   .todo-item.checked .todo-check { background: var(--green); border-color: var(--green); color: var(--bg); }
-  .todo-text { font-size: 12px; color: var(--text); line-height: 1.4; flex: 1; }
+  .todo-text { font-size: 15px; color: var(--text); line-height: 1.4; flex: 1; }
   .todo-item.checked .todo-text { color: var(--green); text-decoration: line-through; }
-  .esp-block { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem; margin-bottom: 0.75rem; background: var(--surface); }
-  .esp-tag { font-size: 10px; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; }
+  .esp-block { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; margin-bottom: 0.85rem; background: var(--surface); }
+  .esp-tag { font-size: 11px; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; }
   .esp-tag.e { color: var(--orange); }
   .esp-tag.s { color: var(--green); }
   .esp-tag.p { color: var(--blue); }
-  .rating-row { display: flex; gap: 6px; margin-bottom: 10px; }
-  .r-btn { width: 34px; height: 34px; border-radius: var(--radius); border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
-  .r-btn.sel { background: rgba(74,157,232,0.2); border-color: var(--blue); color: var(--blue); font-weight: 700; }
-  .loading-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); padding: 12px 0; }
-  .spinner { width: 14px; height: 14px; border: 2px solid var(--dim); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+  .rating-row { display: flex; gap: 7px; margin-bottom: 12px; }
+  .r-btn { width: 38px; height: 38px; border-radius: var(--radius); border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 15px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .r-btn.sel { background: rgba(91,184,255,0.2); border-color: var(--blue); color: var(--blue); font-weight: 700; }
+  .loading-row { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); padding: 14px 0; }
+  .spinner { width: 15px; height: 15px; border: 2px solid var(--dim); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .sync-btn { font-size: 11px; color: var(--blue); border: 1px solid rgba(74,157,232,0.3); border-radius: var(--radius); padding: 4px 10px; background: transparent; cursor: pointer; font-family: inherit; }
+  .sync-btn { font-size: 12px; color: var(--blue); border: 1px solid rgba(91,184,255,0.35); border-radius: var(--radius); padding: 5px 12px; background: transparent; cursor: pointer; font-family: inherit; }
   .clear-screen { display: none; }
   .clear-screen.show { display: block; }
   .clear-badge { text-align: center; padding: 2.5rem 1rem 1.5rem; }
-  .clear-icon { font-size: 56px; color: var(--green); margin-bottom: 0.75rem; }
-  .clear-title { font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
-  .clear-sub { font-size: 13px; color: var(--muted); }
-  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 1rem 0; }
-  .sum-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.75rem 1rem; }
-  .sum-label { font-size: 10px; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; }
-  .sum-val { font-size: 15px; font-weight: 600; color: var(--text); }
-  .tomorrow-card { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
-  .tomorrow-header { font-size: 9px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 0.75rem; text-transform: uppercase; }
-  .tomorrow-row { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--dim); font-size: 13px; color: var(--text); }
+  .clear-icon { font-size: 60px; color: var(--green); margin-bottom: 0.85rem; }
+  .clear-title { font-size: 28px; font-weight: 800; color: var(--text); margin-bottom: 0.35rem; }
+  .clear-sub { font-size: 15px; color: var(--muted); }
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1.1rem 0; }
+  .sum-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.85rem 1rem; }
+  .sum-label { font-size: 11px; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; }
+  .sum-val { font-size: 17px; font-weight: 700; color: var(--text); }
+  .section-card { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem 1.35rem; margin-bottom: 1rem; background: var(--surface); }
+  .section-header { font-size: 10px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 0.85rem; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+  .tomorrow-row { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--dim); font-size: 14px; color: var(--text); }
   .tomorrow-row:last-child { border-bottom: none; }
-  .esp-summary-item { padding: 8px 0; border-bottom: 1px solid var(--dim); font-size: 13px; line-height: 1.5; }
+  .esp-summary-item { padding: 9px 0; border-bottom: 1px solid var(--dim); font-size: 14px; line-height: 1.5; }
   .esp-summary-item:last-child { border-bottom: none; }
-  .close-btn { width: 100%; padding: 14px; background: rgba(74,232,160,0.15); border: 1px solid var(--green); border-radius: var(--radius-lg); color: var(--green); font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; margin-top: 1rem; }
-  .night-msg { text-align: center; font-size: 13px; color: var(--dim); margin-top: 1.5rem; padding-bottom: 2rem; letter-spacing: 0.1em; }
+  .close-btn { width: 100%; padding: 16px; background: rgba(86,232,160,0.15); border: 1px solid var(--green); border-radius: var(--radius-lg); color: var(--green); font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 1rem; }
+  .night-msg { text-align: center; font-size: 14px; color: var(--dim); margin-top: 1.75rem; padding-bottom: 2rem; letter-spacing: 0.1em; }
+
+  /* Calendar */
+  .cal-event { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--dim); font-size: 14px; }
+  .cal-event:last-child { border-bottom: none; }
+  .cal-time { color: var(--accent); font-size: 12px; white-space: nowrap; min-width: 52px; padding-top: 1px; }
+  .cal-title { color: var(--text); line-height: 1.4; }
+  .cal-empty { font-size: 14px; color: var(--muted); padding: 6px 0; }
+
+  /* Weather */
+  .weather-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .weather-temp { font-size: 42px; font-weight: 800; color: var(--text); line-height: 1; }
+  .weather-desc { font-size: 15px; color: var(--muted); margin-top: 3px; }
+  .weather-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+  .weather-meta span { font-size: 13px; color: var(--muted); }
+  .weather-meta strong { color: var(--text); }
+  .forecast-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .fc-day { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 8px 4px; text-align: center; border: 1px solid var(--border); }
+  .fc-dow { font-size: 10px; color: var(--muted); margin-bottom: 4px; letter-spacing: 0.08em; }
+  .fc-icon { font-size: 18px; margin-bottom: 4px; }
+  .fc-hi { font-size: 13px; font-weight: 700; color: var(--text); }
+  .fc-lo { font-size: 11px; color: var(--muted); }
+  .weather-loading { font-size: 14px; color: var(--muted); padding: 10px 0; display: flex; align-items: center; gap: 8px; }
 </style>
 </head>
 <body>
@@ -93,6 +131,7 @@
     </div>
     <div class="progress-row" id="progress-pips"></div>
 
+    <!-- STEP 0: Day Feel -->
     <div class="step active" id="step-0">
       <div class="step-header">01 · Day feel</div>
       <div class="step-title">How was your day?</div>
@@ -113,34 +152,35 @@
       </div>
     </div>
 
+    <!-- STEP 1: ESP -->
     <div class="step" id="step-1">
       <div class="step-header">02 · ESP — Effort / Success / Progress</div>
       <div class="step-title">Reflect on the day</div>
       <div class="step-sub">Pick 1–3 events. Rate each dimension 1–5.</div>
       <div id="esp-event-1" class="esp-block">
-        <div style="font-size:13px; font-weight:600; margin-bottom:8px;">Event 1</div>
+        <div style="font-size:15px; font-weight:700; margin-bottom:10px;">Event 1</div>
         <div class="field"><input type="text" placeholder="What happened?" id="esp1-event" /></div>
         <div class="esp-tag e">Effort — how hard did you push?</div><div class="rating-row" id="esp1-e-row"></div>
         <div class="esp-tag s">Success — what did you achieve?</div><div class="rating-row" id="esp1-s-row"></div>
         <div class="esp-tag p">Progress — how did you move forward?</div><div class="rating-row" id="esp1-p-row"></div>
-        <div class="field" style="margin-top:8px;"><textarea placeholder="Notes..." id="esp1-notes" style="min-height:60px;"></textarea></div>
+        <div class="field" style="margin-top:10px;"><textarea placeholder="Notes..." id="esp1-notes" style="min-height:64px;"></textarea></div>
       </div>
-      <button class="btn" style="width:100%; margin-bottom:0.75rem; font-size:13px;" onclick="toggleESP()" id="add-esp-btn"><i class="ti ti-plus"></i> Add another event</button>
+      <button class="btn" style="width:100%; margin-bottom:0.85rem; font-size:14px;" onclick="toggleESP()" id="add-esp-btn"><i class="ti ti-plus"></i> Add another event</button>
       <div id="esp-event-2" style="display:none;" class="esp-block">
-        <div style="font-size:13px; font-weight:600; margin-bottom:8px;">Event 2</div>
+        <div style="font-size:15px; font-weight:700; margin-bottom:10px;">Event 2</div>
         <div class="field"><input type="text" placeholder="What happened?" id="esp2-event" /></div>
         <div class="esp-tag e">Effort</div><div class="rating-row" id="esp2-e-row"></div>
         <div class="esp-tag s">Success</div><div class="rating-row" id="esp2-s-row"></div>
         <div class="esp-tag p">Progress</div><div class="rating-row" id="esp2-p-row"></div>
-        <div class="field" style="margin-top:8px;"><textarea placeholder="Notes..." id="esp2-notes" style="min-height:60px;"></textarea></div>
+        <div class="field" style="margin-top:10px;"><textarea placeholder="Notes..." id="esp2-notes" style="min-height:64px;"></textarea></div>
       </div>
       <div id="esp-event-3" style="display:none;" class="esp-block">
-        <div style="font-size:13px; font-weight:600; margin-bottom:8px;">Event 3</div>
+        <div style="font-size:15px; font-weight:700; margin-bottom:10px;">Event 3</div>
         <div class="field"><input type="text" placeholder="What happened?" id="esp3-event" /></div>
         <div class="esp-tag e">Effort</div><div class="rating-row" id="esp3-e-row"></div>
         <div class="esp-tag s">Success</div><div class="rating-row" id="esp3-s-row"></div>
         <div class="esp-tag p">Progress</div><div class="rating-row" id="esp3-p-row"></div>
-        <div class="field" style="margin-top:8px;"><textarea placeholder="Notes..." id="esp3-notes" style="min-height:60px;"></textarea></div>
+        <div class="field" style="margin-top:10px;"><textarea placeholder="Notes..." id="esp3-notes" style="min-height:64px;"></textarea></div>
       </div>
       <div class="btn-row">
         <button class="btn" onclick="prev()"><i class="ti ti-arrow-left"></i></button>
@@ -149,18 +189,19 @@
       </div>
     </div>
 
+    <!-- STEP 2: To-do closeout -->
     <div class="step" id="step-2">
       <div class="step-header">03 · To-do closeout</div>
       <div class="step-title">What got done today?</div>
       <div class="step-sub">Tap to mark complete. Live from your Reminders.</div>
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <span style="font-size:11px; color:var(--muted);" id="reminder-status">Loading reminders...</span>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <span style="font-size:12px; color:var(--muted);" id="reminder-status">Loading reminders...</span>
         <button class="sync-btn" onclick="loadReminders()"><i class="ti ti-refresh"></i> Sync</button>
       </div>
       <div id="todo-list"><div class="loading-row"><div class="spinner"></div>Fetching from jsonbin...</div></div>
-      <div class="field" style="margin-top:0.75rem;">
+      <div class="field" style="margin-top:0.85rem;">
         <div class="field-label">Anything else completed?</div>
-        <textarea id="extra-done" placeholder="e.g. replied to that email..." style="min-height:60px;"></textarea>
+        <textarea id="extra-done" placeholder="e.g. replied to that email..." style="min-height:64px;"></textarea>
       </div>
       <div class="btn-row">
         <button class="btn" onclick="prev()"><i class="ti ti-arrow-left"></i></button>
@@ -169,6 +210,7 @@
       </div>
     </div>
 
+    <!-- STEP 3: Workout -->
     <div class="step" id="step-3">
       <div class="step-header">04 · Workout</div>
       <div class="step-title">Did you train today?</div>
@@ -185,7 +227,7 @@
           <div><div class="field-label">Duration (min)</div><input type="number" id="workout-duration" placeholder="45" /></div>
           <div><div class="field-label">Feel (1–10)</div><input type="number" id="workout-feel" placeholder="7" min="1" max="10" /></div>
         </div>
-        <div class="field"><div class="field-label">Notes</div><textarea id="workout-notes" placeholder="What you did, how it went..." style="min-height:60px;"></textarea></div>
+        <div class="field"><div class="field-label">Notes</div><textarea id="workout-notes" placeholder="What you did, how it went..." style="min-height:64px;"></textarea></div>
       </div>
       <div class="btn-row">
         <button class="btn" onclick="prev()"><i class="ti ti-arrow-left"></i></button>
@@ -194,6 +236,7 @@
       </div>
     </div>
 
+    <!-- STEP 4: Nutrition -->
     <div class="step" id="step-4">
       <div class="step-header">05 · Nutrition</div>
       <div class="step-title">How did you eat today?</div>
@@ -206,7 +249,7 @@
         <div><div class="field-label">Carbs (g)</div><input type="number" id="carbs" placeholder="200" /></div>
         <div><div class="field-label">Fat (g)</div><input type="number" id="fat" placeholder="70" /></div>
       </div>
-      <div class="field"><div class="field-label">Notes</div><textarea id="nutrition-notes" placeholder="e.g. big dinner, skipped lunch..." style="min-height:60px;"></textarea></div>
+      <div class="field"><div class="field-label">Notes</div><textarea id="nutrition-notes" placeholder="e.g. big dinner, skipped lunch..." style="min-height:64px;"></textarea></div>
       <div class="btn-row">
         <button class="btn" onclick="prev()"><i class="ti ti-arrow-left"></i></button>
         <button class="btn primary" onclick="next()">Next <i class="ti ti-arrow-right"></i></button>
@@ -214,12 +257,13 @@
       </div>
     </div>
 
+    <!-- STEP 5: Wins & Misses -->
     <div class="step" id="step-5">
-      <div class="step-header">06 · Wins & misses</div>
+      <div class="step-header">06 · Wins &amp; misses</div>
       <div class="step-title">Anything else worth noting?</div>
-      <div class="field"><div class="field-label">Win of the day</div><textarea id="win" placeholder="e.g. shipped the reminders sync..." style="min-height:60px;"></textarea></div>
-      <div class="field"><div class="field-label">What got avoided or left behind?</div><textarea id="miss" placeholder="e.g. didn't cancel Copilot..." style="min-height:60px;"></textarea></div>
-      <div class="field"><div class="field-label">One thing to carry into tomorrow</div><textarea id="carry" placeholder="e.g. do the hard thing first..." style="min-height:60px;"></textarea></div>
+      <div class="field"><div class="field-label">Win of the day</div><textarea id="win" placeholder="e.g. shipped the reminders sync..." style="min-height:64px;"></textarea></div>
+      <div class="field"><div class="field-label">What got avoided or left behind?</div><textarea id="miss" placeholder="e.g. didn't cancel Copilot..." style="min-height:64px;"></textarea></div>
+      <div class="field"><div class="field-label">One thing to carry into tomorrow</div><textarea id="carry" placeholder="e.g. do the hard thing first..." style="min-height:64px;"></textarea></div>
       <div class="btn-row">
         <button class="btn" onclick="prev()"><i class="ti ti-arrow-left"></i></button>
         <button class="btn primary" onclick="finishDebrief()">Close the chapter <i class="ti ti-moon"></i></button>
@@ -227,26 +271,47 @@
     </div>
   </div>
 
+  <!-- FORGE CLEAR SCREEN -->
   <div class="clear-screen" id="clear-screen">
     <div class="clear-badge">
       <div class="clear-icon"><i class="ti ti-circle-check"></i></div>
       <div class="clear-title" id="clear-status">FORGE CLEAR</div>
       <div class="clear-sub" id="clear-sub">Chapter closed. You're good to rest.</div>
     </div>
+
     <div class="summary-grid" id="summary-grid"></div>
-    <div class="tomorrow-card">
-      <div class="tomorrow-header"><i class="ti ti-calendar"></i> Tomorrow at a glance</div>
-      <div class="tomorrow-row"><i class="ti ti-dumbbell" style="font-size:16px; flex-shrink:0;"></i><span id="tomorrow-workout"></span></div>
+
+    <!-- Tomorrow workout -->
+    <div class="section-card">
+      <div class="section-header"><i class="ti ti-dumbbell"></i> Tomorrow's Protocol</div>
+      <div style="font-size:15px; color:var(--text); line-height:1.6;" id="tomorrow-workout"></div>
     </div>
-    <div class="tomorrow-card" id="esp-summary-card" style="display:none;">
-      <div class="tomorrow-header"><i class="ti ti-brain"></i> ESP Reflection</div>
+
+    <!-- ESP Summary -->
+    <div class="section-card" id="esp-summary-card" style="display:none;">
+      <div class="section-header"><i class="ti ti-brain"></i> ESP Reflection</div>
       <div id="esp-summary-list"></div>
     </div>
-    <div class="tomorrow-card" id="carry-card" style="display:none;">
-      <div class="tomorrow-header"><i class="ti ti-arrow-right"></i> Carry into tomorrow</div>
-      <div style="font-size:13px; line-height:1.6;" id="carry-display"></div>
+
+    <!-- Carry forward -->
+    <div class="section-card" id="carry-card" style="display:none;">
+      <div class="section-header"><i class="ti ti-arrow-right"></i> Carry into tomorrow</div>
+      <div style="font-size:15px; line-height:1.6;" id="carry-display"></div>
     </div>
-    <div class="night-msg">Rest well, Sean.</div>
+
+    <!-- Calendar -->
+    <div class="section-card" id="cal-card">
+      <div class="section-header"><i class="ti ti-calendar"></i> Tomorrow's Calendar</div>
+      <div id="cal-content"><div class="weather-loading"><div class="spinner"></div>Loading calendar...</div></div>
+    </div>
+
+    <!-- Weather -->
+    <div class="section-card" id="weather-card">
+      <div class="section-header"><i class="ti ti-cloud"></i> 7-Day Forecast · Richmond BC</div>
+      <div id="weather-content"><div class="weather-loading"><div class="spinner"></div>Loading weather...</div></div>
+    </div>
+
+    <div class="night-msg">Rest well, Sean. 🌙</div>
   </div>
 </div>
 
@@ -261,12 +326,116 @@ let selectedWorkout = '';
 let reminders = [];
 const todoChecked = {};
 
+// ── WMO weather code to emoji
+function wmoIcon(code) {
+  if (code === 0) return '☀️';
+  if (code <= 2) return '🌤️';
+  if (code <= 3) return '☁️';
+  if (code <= 48) return '🌫️';
+  if (code <= 57) return '🌧️';
+  if (code <= 67) return '🌧️';
+  if (code <= 77) return '❄️';
+  if (code <= 82) return '🌦️';
+  if (code <= 86) return '🌨️';
+  if (code <= 99) return '⛈️';
+  return '🌡️';
+}
+
+function wmoDesc(code) {
+  if (code === 0) return 'Clear sky';
+  if (code <= 2) return 'Partly cloudy';
+  if (code <= 3) return 'Overcast';
+  if (code <= 48) return 'Foggy';
+  if (code <= 57) return 'Drizzle';
+  if (code <= 67) return 'Rain';
+  if (code <= 77) return 'Snow';
+  if (code <= 82) return 'Rain showers';
+  if (code <= 86) return 'Snow showers';
+  if (code <= 99) return 'Thunderstorm';
+  return 'Unknown';
+}
+
+async function loadWeather() {
+  const el = document.getElementById('weather-content');
+  try {
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=49.1666&longitude=-123.1336&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&current_weather=true&timezone=America%2FVancouver&temperature_unit=celsius';
+    const res = await fetch(url);
+    const d = await res.json();
+    const cw = d.current_weather;
+    const daily = d.daily;
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    let html = '<div class="weather-top">';
+    html += '<div class="weather-temp">' + Math.round(cw.temperature) + '°C</div>';
+    html += '<div><div style="font-size:28px;">' + wmoIcon(cw.weathercode) + '</div><div class="weather-desc">' + wmoDesc(cw.weathercode) + '</div></div>';
+    html += '</div>';
+    html += '<div class="weather-meta">';
+    html += '<span>💨 Wind <strong>' + Math.round(cw.windspeed) + ' km/h</strong></span>';
+    html += '</div>';
+
+    // 7-day forecast
+    html += '<div class="forecast-row">';
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(daily.time[i] + 'T12:00:00');
+      const dow = i === 0 ? 'Today' : days[date.getDay()];
+      html += '<div class="fc-day">';
+      html += '<div class="fc-dow">' + dow + '</div>';
+      html += '<div class="fc-icon">' + wmoIcon(daily.weathercode[i]) + '</div>';
+      html += '<div class="fc-hi">' + Math.round(daily.temperature_2m_max[i]) + '°</div>';
+      html += '<div class="fc-lo">' + Math.round(daily.temperature_2m_min[i]) + '°</div>';
+      if (daily.precipitation_sum[i] > 0.5) html += '<div style="font-size:10px;color:var(--blue);">' + daily.precipitation_sum[i].toFixed(1) + 'mm</div>';
+      html += '</div>';
+    }
+    html += '</div>';
+    el.innerHTML = html;
+  } catch(e) {
+    el.innerHTML = '<div style="font-size:14px;color:var(--muted);">Weather unavailable. Check connection.</div>';
+  }
+}
+
+async function loadCalendar() {
+  const el = document.getElementById('cal-content');
+  // Pull from JSONBin — same master key used for reminders
+  // Calendar data is expected under data.record.calendar (array of {time, title})
+  // If not present, fall back to a helpful message
+  try {
+    const masterKey = localStorage.getItem('forge_cal_key') || '';
+    if (!masterKey) {
+      el.innerHTML = '<div class="cal-empty">No calendar key saved. Open FORGE Morning Brief on GitHub Pages to sync your calendar, or save your key in Settings.</div>';
+      return;
+    }
+    const res = await fetch('https://api.jsonbin.io/v3/b/6a249406f5f4af5e29c3fcaf/latest', {
+      headers: { 'X-Master-Key': masterKey }
+    });
+    const data = await res.json();
+    const events = data?.record?.tomorrow || data?.record?.today || [];
+    if (!events.length) {
+      el.innerHTML = '<div class="cal-empty">🗓 Nothing scheduled for tomorrow.</div>';
+      return;
+    }
+    el.innerHTML = events.map(ev =>
+      '<div class="cal-event"><span class="cal-time">' + (ev.time || 'All day') + '</span><span class="cal-title">' + ev.title + '</span></div>'
+    ).join('');
+  } catch(e) {
+    el.innerHTML = '<div class="cal-empty">Calendar sync unavailable.</div>';
+  }
+}
+
 function init() {
   document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
   buildPips();
   buildESPRatings();
   setTomorrowWorkout();
   loadReminders();
+
+  // Save master key from localStorage if present (shared with FORGE Reminder Engine)
+  const stored = localStorage.getItem('forge_re_v3');
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      if (parsed.masterKey) localStorage.setItem('forge_cal_key', parsed.masterKey);
+    } catch(e) {}
+  }
 }
 
 function buildPips() {
@@ -310,7 +479,7 @@ async function loadReminders() {
     }
     if (!list) return;
     if (reminders.length === 0) {
-      list.innerHTML = '<div style="font-size:13px; color:var(--muted); padding:8px 0;">No reminders found. Run your Sync shortcut first.</div>';
+      list.innerHTML = '<div style="font-size:14px; color:var(--muted); padding:10px 0;">No reminders found. Run your Sync shortcut first.</div>';
       if (status) status.textContent = '0 reminders';
       return;
     }
@@ -321,12 +490,12 @@ async function loadReminders() {
       const el = document.createElement('div');
       el.className = 'todo-item';
       el.id = 'todo-' + r.id;
-      el.innerHTML = '<div class="todo-check" id="check-'+r.id+'"><i class="ti ti-check" style="font-size:11px; display:none;" id="cm-'+r.id+'"></i></div><div class="todo-text">'+r.text+'</div>';
+      el.innerHTML = '<div class="todo-check" id="check-'+r.id+'"><i class="ti ti-check" style="font-size:12px; display:none;" id="cm-'+r.id+'"></i></div><div class="todo-text">'+r.text+'</div>';
       el.onclick = () => toggleTodo(r.id);
       list.appendChild(el);
     });
   } catch(e) {
-    if (list) list.innerHTML = '<div style="font-size:13px; color:var(--red); padding:8px 0;">Could not load reminders.</div>';
+    if (list) list.innerHTML = '<div style="font-size:14px; color:var(--red); padding:10px 0;">Could not load reminders.</div>';
     if (status) status.textContent = 'Load failed';
   }
 }
@@ -416,12 +585,14 @@ function finishDebrief() {
   const espItems = [];
   for (let n=1; n<=espCount; n++) {
     const ev = document.getElementById('esp'+n+'-event')?.value;
-    if (ev) espItems.push('<div class="esp-summary-item"><strong>'+ev+'</strong><br><span style="font-size:11px;color:var(--muted);">Effort '+(espRatings['esp'+n+'-e']||'—')+'/5 · Success '+(espRatings['esp'+n+'-s']||'—')+'/5 · Progress '+(espRatings['esp'+n+'-p']||'—')+'/5</span></div>');
+    if (ev) espItems.push('<div class="esp-summary-item"><strong>'+ev+'</strong><br><span style="font-size:12px;color:var(--muted);">Effort '+(espRatings['esp'+n+'-e']||'—')+'/5 · Success '+(espRatings['esp'+n+'-s']||'—')+'/5 · Progress '+(espRatings['esp'+n+'-p']||'—')+'/5</span></div>');
   }
   if (espItems.length) { document.getElementById('esp-summary-card').style.display='block'; document.getElementById('esp-summary-list').innerHTML=espItems.join(''); }
   const carry = document.getElementById('carry')?.value;
   if (carry) { document.getElementById('carry-card').style.display='block'; document.getElementById('carry-display').textContent=carry; }
   setTomorrowWorkout();
+  loadWeather();
+  loadCalendar();
 }
 
 init();
