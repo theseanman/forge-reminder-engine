@@ -301,7 +301,7 @@
 
     <!-- Calendar -->
     <div class="section-card" id="cal-card">
-      <div class="section-header"><i class="ti ti-calendar"></i> Tomorrow's Calendar</div>
+      <div class="section-header"><i class="ti ti-calendar"></i> 7-Day Calendar</div>
       <div id="cal-content"><div class="weather-loading"><div class="spinner"></div>Loading calendar...</div></div>
     </div>
 
@@ -408,14 +408,26 @@ async function loadCalendar() {
       headers: { 'X-Master-Key': masterKey }
     });
     const data = await res.json();
-    const events = data?.record?.tomorrow || data?.record?.today || [];
-    if (!events.length) {
-      el.innerHTML = '<div class="cal-empty">🗓 Nothing scheduled for tomorrow.</div>';
+    const events = data?.record?.week || data?.record?.tomorrow || data?.record?.today || [];
+    if (!Array.isArray(events) || !events.length) {
+      el.innerHTML = '<div class="cal-empty">🗓 No events in the next 7 days.</div>';
       return;
     }
-    el.innerHTML = events.map(ev =>
-      '<div class="cal-event"><span class="cal-time">' + (ev.time || 'All day') + '</span><span class="cal-title">' + ev.title + '</span></div>'
-    ).join('');
+    // Group by date
+    const grouped = {};
+    events.forEach(ev => {
+      const key = ev.date || 'Unknown';
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(ev);
+    });
+    let html = '';
+    Object.keys(grouped).forEach(date => {
+      html += '<div style="font-size:11px;font-weight:700;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin:10px 0 5px;">' + date + '</div>';
+      html += grouped[date].map(ev =>
+        '<div class="cal-event"><span class="cal-time">' + (ev.time || 'All day') + '</span><span class="cal-title">' + ev.title + '</span></div>'
+      ).join('');
+    });
+    el.innerHTML = html;
   } catch(e) {
     el.innerHTML = '<div class="cal-empty">Calendar sync unavailable.</div>';
   }
