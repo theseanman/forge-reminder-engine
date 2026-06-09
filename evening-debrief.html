@@ -404,8 +404,8 @@ async function loadCalendar() {
       el.innerHTML = '<div class="cal-empty">No calendar key saved. Open FORGE Morning Brief on GitHub Pages to sync your calendar, or save your key in Settings.</div>';
       return;
     }
-    const res = await fetch('https://api.jsonbin.io/v3/b/6a277510da38895dfe9d6de0/latest', {
-      headers: { 'X-Master-Key': masterKey }
+    const res = await fetch('https://theseanman.github.io/forge-daily-brief/calendar.json', {
+
     });
     const data = await res.json();
     const events = data?.record?.week || data?.record?.tomorrow || data?.record?.today || [];
