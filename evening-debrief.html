@@ -7,30 +7,12 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
   :root {
-    --bg: #0d1b2e;
-    --bg2: #112240;
-    --surface: #162d4a;
-    --border: #1e3a5f;
-    --dim: #2a4a6e;
-    --accent: #f5c842;
-    --accent-dim: #b8902a;
-    --red: #ff6b6b;
-    --green: #56e8a0;
-    --orange: #ff9a5c;
-    --blue: #5bb8ff;
-    --purple: #b57aff;
-    --text: #e8f4ff;
-    --muted: #7a9abf;
-    --radius: 10px;
-    --radius-lg: 16px;
+    --bg: #0d1b2e; --bg2: #112240; --surface: #162d4a; --border: #1e3a5f; --dim: #2a4a6e;
+    --accent: #f5c842; --red: #ff6b6b; --green: #56e8a0; --orange: #ff9a5c; --blue: #5bb8ff; --purple: #b57aff;
+    --text: #e8f4ff; --muted: #7a9abf; --radius: 10px; --radius-lg: 16px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: linear-gradient(175deg, #0d1b2e 0%, #112240 40%, #0e2237 70%, #0a1628 100%);
-    color: var(--text);
-    font-family: 'DM Mono', 'Courier New', monospace;
-    min-height: 100vh;
-  }
+  body { background: linear-gradient(175deg,#0d1b2e 0%,#112240 40%,#0e2237 70%,#0a1628 100%); color: var(--text); font-family: 'DM Mono','Courier New',monospace; min-height: 100vh; }
   .shell { max-width: 500px; margin: 0 auto; padding: 24px 18px 80px; }
   .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.75rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border); }
   .forge-label { font-size: 13px; letter-spacing: 0.18em; color: var(--accent); font-weight: 700; text-transform: uppercase; }
@@ -44,11 +26,7 @@
   .step-header { font-size: 11px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 0.6rem; text-transform: uppercase; }
   .step-title { font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; line-height: 1.2; }
   .step-sub { font-size: 15px; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
-  textarea, input[type=text], input[type=number] {
-    width: 100%; border-radius: var(--radius); border: 1px solid var(--border);
-    background: var(--surface); color: var(--text); font-family: inherit;
-    font-size: 15px; padding: 12px 14px; resize: vertical;
-  }
+  textarea, input[type=text], input[type=number] { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: inherit; font-size: 15px; padding: 12px 14px; resize: vertical; }
   textarea { min-height: 88px; }
   textarea:focus, input:focus { outline: none; border-color: var(--blue); }
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0.85rem; }
@@ -70,15 +48,13 @@
   .todo-item.checked .todo-text { color: var(--green); text-decoration: line-through; }
   .esp-block { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; margin-bottom: 0.85rem; background: var(--surface); }
   .esp-tag { font-size: 11px; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; }
-  .esp-tag.e { color: var(--orange); }
-  .esp-tag.s { color: var(--green); }
-  .esp-tag.p { color: var(--blue); }
+  .esp-tag.e { color: var(--orange); } .esp-tag.s { color: var(--green); } .esp-tag.p { color: var(--blue); }
   .rating-row { display: flex; gap: 7px; margin-bottom: 12px; }
   .r-btn { width: 38px; height: 38px; border-radius: var(--radius); border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 15px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
   .r-btn.sel { background: rgba(91,184,255,0.2); border-color: var(--blue); color: var(--blue); font-weight: 700; }
-  .loading-row { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); padding: 14px 0; }
   .spinner { width: 15px; height: 15px; border: 2px solid var(--dim); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-row { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); padding: 14px 0; }
   .sync-btn { font-size: 12px; color: var(--blue); border: 1px solid rgba(91,184,255,0.35); border-radius: var(--radius); padding: 5px 12px; background: transparent; cursor: pointer; font-family: inherit; }
   .clear-screen { display: none; }
   .clear-screen.show { display: block; }
@@ -92,34 +68,28 @@
   .sum-val { font-size: 17px; font-weight: 700; color: var(--text); }
   .section-card { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem 1.35rem; margin-bottom: 1rem; background: var(--surface); }
   .section-header { font-size: 10px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 0.85rem; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
-  .tomorrow-row { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--dim); font-size: 14px; color: var(--text); }
-  .tomorrow-row:last-child { border-bottom: none; }
-  .esp-summary-item { padding: 9px 0; border-bottom: 1px solid var(--dim); font-size: 14px; line-height: 1.5; }
-  .esp-summary-item:last-child { border-bottom: none; }
-  .close-btn { width: 100%; padding: 16px; background: rgba(86,232,160,0.15); border: 1px solid var(--green); border-radius: var(--radius-lg); color: var(--green); font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 1rem; }
-  .night-msg { text-align: center; font-size: 14px; color: var(--dim); margin-top: 1.75rem; padding-bottom: 2rem; letter-spacing: 0.1em; }
-
-  /* Calendar */
   .cal-event { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--dim); font-size: 14px; }
   .cal-event:last-child { border-bottom: none; }
   .cal-time { color: var(--accent); font-size: 12px; white-space: nowrap; min-width: 52px; padding-top: 1px; }
   .cal-title { color: var(--text); line-height: 1.4; }
+  .cal-date-header { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin: 10px 0 5px; }
   .cal-empty { font-size: 14px; color: var(--muted); padding: 6px 0; }
-
-  /* Weather */
   .weather-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
   .weather-temp { font-size: 42px; font-weight: 800; color: var(--text); line-height: 1; }
   .weather-desc { font-size: 15px; color: var(--muted); margin-top: 3px; }
   .weather-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
   .weather-meta span { font-size: 13px; color: var(--muted); }
   .weather-meta strong { color: var(--text); }
-  .forecast-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .forecast-row { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; }
   .fc-day { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 8px 4px; text-align: center; border: 1px solid var(--border); }
   .fc-dow { font-size: 10px; color: var(--muted); margin-bottom: 4px; letter-spacing: 0.08em; }
   .fc-icon { font-size: 18px; margin-bottom: 4px; }
   .fc-hi { font-size: 13px; font-weight: 700; color: var(--text); }
   .fc-lo { font-size: 11px; color: var(--muted); }
   .weather-loading { font-size: 14px; color: var(--muted); padding: 10px 0; display: flex; align-items: center; gap: 8px; }
+  .night-msg { text-align: center; font-size: 14px; color: var(--dim); margin-top: 1.75rem; padding-bottom: 2rem; letter-spacing: 0.1em; }
+  .esp-summary-item { padding: 9px 0; border-bottom: 1px solid var(--dim); font-size: 14px; line-height: 1.5; }
+  .esp-summary-item:last-child { border-bottom: none; }
 </style>
 </head>
 <body>
@@ -147,9 +117,7 @@
         <div class="field-label">One-liner (optional)</div>
         <textarea id="day-note" placeholder="e.g. Got a lot done but the afternoon dragged..."></textarea>
       </div>
-      <div class="btn-row">
-        <button class="btn primary" onclick="next()">Next <i class="ti ti-arrow-right"></i></button>
-      </div>
+      <div class="btn-row"><button class="btn primary" onclick="next()">Next <i class="ti ti-arrow-right"></i></button></div>
     </div>
 
     <!-- STEP 1: ESP -->
@@ -158,25 +126,25 @@
       <div class="step-title">Reflect on the day</div>
       <div class="step-sub">Pick 1–3 events. Rate each dimension 1–5.</div>
       <div id="esp-event-1" class="esp-block">
-        <div style="font-size:15px; font-weight:700; margin-bottom:10px;">Event 1</div>
-        <div class="field"><input type="text" placeholder="What happened?" id="esp1-event" /></div>
-        <div class="esp-tag e">Effort — how hard did you push?</div><div class="rating-row" id="esp1-e-row"></div>
-        <div class="esp-tag s">Success — what did you achieve?</div><div class="rating-row" id="esp1-s-row"></div>
-        <div class="esp-tag p">Progress — how did you move forward?</div><div class="rating-row" id="esp1-p-row"></div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:10px;">Event 1</div>
+        <div class="field"><input type="text" placeholder="What happened?" id="esp1-event"/></div>
+        <div class="esp-tag e">Effort</div><div class="rating-row" id="esp1-e-row"></div>
+        <div class="esp-tag s">Success</div><div class="rating-row" id="esp1-s-row"></div>
+        <div class="esp-tag p">Progress</div><div class="rating-row" id="esp1-p-row"></div>
         <div class="field" style="margin-top:10px;"><textarea placeholder="Notes..." id="esp1-notes" style="min-height:64px;"></textarea></div>
       </div>
-      <button class="btn" style="width:100%; margin-bottom:0.85rem; font-size:14px;" onclick="toggleESP()" id="add-esp-btn"><i class="ti ti-plus"></i> Add another event</button>
+      <button class="btn" style="width:100%;margin-bottom:0.85rem;font-size:14px;" onclick="toggleESP()" id="add-esp-btn"><i class="ti ti-plus"></i> Add another event</button>
       <div id="esp-event-2" style="display:none;" class="esp-block">
-        <div style="font-size:15px; font-weight:700; margin-bottom:10px;">Event 2</div>
-        <div class="field"><input type="text" placeholder="What happened?" id="esp2-event" /></div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:10px;">Event 2</div>
+        <div class="field"><input type="text" placeholder="What happened?" id="esp2-event"/></div>
         <div class="esp-tag e">Effort</div><div class="rating-row" id="esp2-e-row"></div>
         <div class="esp-tag s">Success</div><div class="rating-row" id="esp2-s-row"></div>
         <div class="esp-tag p">Progress</div><div class="rating-row" id="esp2-p-row"></div>
         <div class="field" style="margin-top:10px;"><textarea placeholder="Notes..." id="esp2-notes" style="min-height:64px;"></textarea></div>
       </div>
       <div id="esp-event-3" style="display:none;" class="esp-block">
-        <div style="font-size:15px; font-weight:700; margin-bottom:10px;">Event 3</div>
-        <div class="field"><input type="text" placeholder="What happened?" id="esp3-event" /></div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:10px;">Event 3</div>
+        <div class="field"><input type="text" placeholder="What happened?" id="esp3-event"/></div>
         <div class="esp-tag e">Effort</div><div class="rating-row" id="esp3-e-row"></div>
         <div class="esp-tag s">Success</div><div class="rating-row" id="esp3-s-row"></div>
         <div class="esp-tag p">Progress</div><div class="rating-row" id="esp3-p-row"></div>
@@ -193,12 +161,12 @@
     <div class="step" id="step-2">
       <div class="step-header">03 · To-do closeout</div>
       <div class="step-title">What got done today?</div>
-      <div class="step-sub">Tap to mark complete. Live from your Reminders.</div>
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <span style="font-size:12px; color:var(--muted);" id="reminder-status">Loading reminders...</span>
+      <div class="step-sub">Tap to mark complete.</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:12px;color:var(--muted);" id="reminder-status">Loading...</span>
         <button class="sync-btn" onclick="loadReminders()"><i class="ti ti-refresh"></i> Sync</button>
       </div>
-      <div id="todo-list"><div class="loading-row"><div class="spinner"></div>Fetching from jsonbin...</div></div>
+      <div id="todo-list"><div class="loading-row"><div class="spinner"></div>Fetching reminders...</div></div>
       <div class="field" style="margin-top:0.85rem;">
         <div class="field-label">Anything else completed?</div>
         <textarea id="extra-done" placeholder="e.g. replied to that email..." style="min-height:64px;"></textarea>
@@ -224,8 +192,8 @@
       </div>
       <div id="workout-fields" style="display:none;">
         <div class="row2">
-          <div><div class="field-label">Duration (min)</div><input type="number" id="workout-duration" placeholder="45" /></div>
-          <div><div class="field-label">Feel (1–10)</div><input type="number" id="workout-feel" placeholder="7" min="1" max="10" /></div>
+          <div><div class="field-label">Duration (min)</div><input type="number" id="workout-duration" placeholder="45"/></div>
+          <div><div class="field-label">Feel (1–10)</div><input type="number" id="workout-feel" placeholder="7" min="1" max="10"/></div>
         </div>
         <div class="field"><div class="field-label">Notes</div><textarea id="workout-notes" placeholder="What you did, how it went..." style="min-height:64px;"></textarea></div>
       </div>
@@ -242,12 +210,12 @@
       <div class="step-title">How did you eat today?</div>
       <div class="step-sub">Enter from Cal AI or estimate.</div>
       <div class="row2">
-        <div><div class="field-label">Calories in</div><input type="number" id="cal-in" placeholder="2100" /></div>
-        <div><div class="field-label">Protein (g)</div><input type="number" id="protein" placeholder="160" /></div>
+        <div><div class="field-label">Calories in</div><input type="number" id="cal-in" placeholder="2100"/></div>
+        <div><div class="field-label">Protein (g)</div><input type="number" id="protein" placeholder="160"/></div>
       </div>
       <div class="row2">
-        <div><div class="field-label">Carbs (g)</div><input type="number" id="carbs" placeholder="200" /></div>
-        <div><div class="field-label">Fat (g)</div><input type="number" id="fat" placeholder="70" /></div>
+        <div><div class="field-label">Carbs (g)</div><input type="number" id="carbs" placeholder="200"/></div>
+        <div><div class="field-label">Fat (g)</div><input type="number" id="fat" placeholder="70"/></div>
       </div>
       <div class="field"><div class="field-label">Notes</div><textarea id="nutrition-notes" placeholder="e.g. big dinner, skipped lunch..." style="min-height:64px;"></textarea></div>
       <div class="btn-row">
@@ -278,45 +246,36 @@
       <div class="clear-title" id="clear-status">FORGE CLEAR</div>
       <div class="clear-sub" id="clear-sub">Chapter closed. You're good to rest.</div>
     </div>
-
     <div class="summary-grid" id="summary-grid"></div>
-
-    <!-- Tomorrow workout -->
     <div class="section-card">
       <div class="section-header"><i class="ti ti-dumbbell"></i> Tomorrow's Protocol</div>
-      <div style="font-size:15px; color:var(--text); line-height:1.6;" id="tomorrow-workout"></div>
+      <div style="font-size:15px;color:var(--text);line-height:1.6;" id="tomorrow-workout"></div>
     </div>
-
-    <!-- ESP Summary -->
     <div class="section-card" id="esp-summary-card" style="display:none;">
       <div class="section-header"><i class="ti ti-brain"></i> ESP Reflection</div>
       <div id="esp-summary-list"></div>
     </div>
-
-    <!-- Carry forward -->
     <div class="section-card" id="carry-card" style="display:none;">
       <div class="section-header"><i class="ti ti-arrow-right"></i> Carry into tomorrow</div>
-      <div style="font-size:15px; line-height:1.6;" id="carry-display"></div>
+      <div style="font-size:15px;line-height:1.6;" id="carry-display"></div>
     </div>
-
-    <!-- Calendar -->
     <div class="section-card" id="cal-card">
       <div class="section-header"><i class="ti ti-calendar"></i> 7-Day Calendar</div>
       <div id="cal-content"><div class="weather-loading"><div class="spinner"></div>Loading calendar...</div></div>
     </div>
-
-    <!-- Weather -->
-    <div class="section-card" id="weather-card">
+    <div class="section-card">
       <div class="section-header"><i class="ti ti-cloud"></i> 7-Day Forecast · Richmond BC</div>
       <div id="weather-content"><div class="weather-loading"><div class="spinner"></div>Loading weather...</div></div>
     </div>
-
     <div class="night-msg">Rest well, Sean. 🌙</div>
   </div>
 </div>
 
 <script>
 const JSONBIN_URL = 'https://api.jsonbin.io/v3/b/6a1f705cda38895dfe7e4f97/latest';
+const ICLOUD_EMAIL = 'yoseanreid@icloud.com';
+const ICLOUD_PASS = 'qtuc-qbnd-qmzs-hgtv';
+const CALDAV_URL = 'https://caldav.icloud.com';
 const STEPS = 6;
 let currentStep = 0;
 const espRatings = {};
@@ -326,287 +285,192 @@ let selectedWorkout = '';
 let reminders = [];
 const todoChecked = {};
 
-// ── WMO weather code to emoji
-function wmoIcon(code) {
-  if (code === 0) return '☀️';
-  if (code <= 2) return '🌤️';
-  if (code <= 3) return '☁️';
-  if (code <= 48) return '🌫️';
-  if (code <= 57) return '🌧️';
-  if (code <= 67) return '🌧️';
-  if (code <= 77) return '❄️';
-  if (code <= 82) return '🌦️';
-  if (code <= 86) return '🌨️';
-  if (code <= 99) return '⛈️';
-  return '🌡️';
-}
+function wmoIcon(c){if(c===0)return'☀️';if(c<=2)return'🌤️';if(c<=3)return'☁️';if(c<=48)return'🌫️';if(c<=57)return'🌧️';if(c<=67)return'🌧️';if(c<=77)return'❄️';if(c<=82)return'🌦️';if(c<=86)return'🌨️';if(c<=99)return'⛈️';return'🌡️';}
+function wmoDesc(c){if(c===0)return'Clear sky';if(c<=2)return'Partly cloudy';if(c<=3)return'Overcast';if(c<=48)return'Foggy';if(c<=57)return'Drizzle';if(c<=67)return'Rain';if(c<=77)return'Snow';if(c<=82)return'Rain showers';if(c<=86)return'Snow showers';if(c<=99)return'Thunderstorm';return'Unknown';}
 
-function wmoDesc(code) {
-  if (code === 0) return 'Clear sky';
-  if (code <= 2) return 'Partly cloudy';
-  if (code <= 3) return 'Overcast';
-  if (code <= 48) return 'Foggy';
-  if (code <= 57) return 'Drizzle';
-  if (code <= 67) return 'Rain';
-  if (code <= 77) return 'Snow';
-  if (code <= 82) return 'Rain showers';
-  if (code <= 86) return 'Snow showers';
-  if (code <= 99) return 'Thunderstorm';
-  return 'Unknown';
-}
-
-async function loadWeather() {
-  const el = document.getElementById('weather-content');
-  try {
-    const url = 'https://api.open-meteo.com/v1/forecast?latitude=49.1666&longitude=-123.1336&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&current_weather=true&timezone=America%2FVancouver&temperature_unit=celsius';
-    const res = await fetch(url);
-    const d = await res.json();
-    const cw = d.current_weather;
-    const daily = d.daily;
-    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-
-    let html = '<div class="weather-top">';
-    html += '<div class="weather-temp">' + Math.round(cw.temperature) + '°C</div>';
-    html += '<div><div style="font-size:28px;">' + wmoIcon(cw.weathercode) + '</div><div class="weather-desc">' + wmoDesc(cw.weathercode) + '</div></div>';
-    html += '</div>';
-    html += '<div class="weather-meta">';
-    html += '<span>💨 Wind <strong>' + Math.round(cw.windspeed) + ' km/h</strong></span>';
-    html += '</div>';
-
-    // 7-day forecast
-    html += '<div class="forecast-row">';
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(daily.time[i] + 'T12:00:00');
-      const dow = i === 0 ? 'Today' : days[date.getDay()];
-      html += '<div class="fc-day">';
-      html += '<div class="fc-dow">' + dow + '</div>';
-      html += '<div class="fc-icon">' + wmoIcon(daily.weathercode[i]) + '</div>';
-      html += '<div class="fc-hi">' + Math.round(daily.temperature_2m_max[i]) + '°</div>';
-      html += '<div class="fc-lo">' + Math.round(daily.temperature_2m_min[i]) + '°</div>';
-      if (daily.precipitation_sum[i] > 0.5) html += '<div style="font-size:10px;color:var(--blue);">' + daily.precipitation_sum[i].toFixed(1) + 'mm</div>';
-      html += '</div>';
+async function loadWeather(){
+  const el=document.getElementById('weather-content');
+  try{
+    const url='https://api.open-meteo.com/v1/forecast?latitude=49.1666&longitude=-123.1336&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum&current_weather=true&timezone=America%2FVancouver&temperature_unit=celsius';
+    const res=await fetch(url);
+    const d=await res.json();
+    const cw=d.current_weather;
+    const daily=d.daily;
+    const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    let html='<div class="weather-top"><div class="weather-temp">'+Math.round(cw.temperature)+'°C</div><div><div style="font-size:28px;">'+wmoIcon(cw.weathercode)+'</div><div class="weather-desc">'+wmoDesc(cw.weathercode)+'</div></div></div>';
+    html+='<div class="weather-meta"><span>💨 Wind <strong>'+Math.round(cw.windspeed)+' km/h</strong></span></div>';
+    html+='<div class="forecast-row">';
+    for(let i=0;i<7;i++){
+      const date=new Date(daily.time[i]+'T12:00:00');
+      const dow=i===0?'Today':days[date.getDay()];
+      html+='<div class="fc-day"><div class="fc-dow">'+dow+'</div><div class="fc-icon">'+wmoIcon(daily.weathercode[i])+'</div><div class="fc-hi">'+Math.round(daily.temperature_2m_max[i])+'°</div><div class="fc-lo">'+Math.round(daily.temperature_2m_min[i])+'°</div>';
+      if(daily.precipitation_sum[i]>0.5)html+='<div style="font-size:10px;color:var(--blue);">'+daily.precipitation_sum[i].toFixed(1)+'mm</div>';
+      html+='</div>';
     }
-    html += '</div>';
-    el.innerHTML = html;
-  } catch(e) {
-    el.innerHTML = '<div style="font-size:14px;color:var(--muted);">Weather unavailable. Check connection.</div>';
-  }
+    html+='</div>';
+    el.innerHTML=html;
+  }catch(e){el.innerHTML='<div style="font-size:14px;color:var(--muted);">Weather unavailable.</div>';}
 }
 
-async function loadCalendar() {
-  const el = document.getElementById('cal-content');
-  // Pull from JSONBin — same master key used for reminders
-  // Calendar data is expected under data.record.calendar (array of {time, title})
-  // If not present, fall back to a helpful message
-  try {
-    const masterKey = localStorage.getItem('forge_cal_key') || '$2a$10$rs9Sak4dqIbcRvK1M.wAnOkEz1PsUKu.DqrastjCx2npbrJYr3r/2';
-    if (!masterKey) {
-      el.innerHTML = '<div class="cal-empty">No calendar key saved. Open FORGE Morning Brief on GitHub Pages to sync your calendar, or save your key in Settings.</div>';
-      return;
-    }
-    const res = await fetch('https://theseanman.github.io/forge-daily-brief/data.json', {
-
+async function loadCalendar(){
+  const el=document.getElementById('cal-content');
+  try{
+    // Use a CORS proxy to fetch iCloud CalDAV
+    const today=new Date();
+    const start=today.toISOString().split('T')[0].replace(/-/g,'')+'T000000Z';
+    const end=new Date(today.getTime()+7*86400000).toISOString().split('T')[0].replace(/-/g,'')+'T235959Z';
+    const body=`<?xml version="1.0" encoding="UTF-8"?>
+<C:calendar-query xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
+  <D:prop><D:getetag/><C:calendar-data/></D:prop>
+  <C:filter><C:comp-filter name="VCALENDAR"><C:comp-filter name="VEVENT">
+    <C:time-range start="${start}" end="${end}"/>
+  </C:comp-filter></C:comp-filter></C:filter>
+</C:calendar-query>`;
+    const creds=btoa(ICLOUD_EMAIL+':'+ICLOUD_PASS);
+    const res=await fetch('https://corsproxy.io/?'+encodeURIComponent(CALDAV_URL+'/'+ICLOUD_EMAIL+'/calendars/'),{
+      method:'REPORT',
+      headers:{'Authorization':'Basic '+creds,'Content-Type':'application/xml','Depth':'1'},
+      body
     });
-    const data = await res.json();
-    const events = data?.calendar || data?.record?.week || data?.record?.tomorrow || data?.record?.today || [];
-    if (!Array.isArray(events) || !events.length) {
-      el.innerHTML = '<div class="cal-empty">🗓 No events in the next 7 days.</div>';
-      return;
-    }
-    // Group by date
-    const grouped = {};
-    events.forEach(ev => {
-      const key = ev.date || 'Unknown';
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(ev);
-    });
-    let html = '';
-    Object.keys(grouped).forEach(date => {
-      html += '<div style="font-size:11px;font-weight:700;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin:10px 0 5px;">' + date + '</div>';
-      html += grouped[date].map(ev =>
-        '<div class="cal-event"><span class="cal-time">' + (ev.time || 'All day') + '</span><span class="cal-title">' + ev.title + '</span></div>'
-      ).join('');
-    });
-    el.innerHTML = html;
-  } catch(e) {
-    el.innerHTML = '<div class="cal-empty">Calendar sync unavailable.</div>';
-  }
-}
-
-function init() {
-  document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-  buildPips();
-  buildESPRatings();
-  setTomorrowWorkout();
-  loadReminders();
-
-  // Save master key from localStorage if present (shared with FORGE Reminder Engine)
-  const stored = localStorage.getItem('forge_re_v3');
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored);
-      if (parsed.masterKey) localStorage.setItem('forge_cal_key', parsed.masterKey);
-    } catch(e) {}
-  }
-}
-
-function buildPips() {
-  const row = document.getElementById('progress-pips');
-  row.innerHTML = '';
-  for (let i = 0; i < STEPS; i++) {
-    const d = document.createElement('div');
-    d.className = 'pip' + (i < currentStep ? ' done' : i === currentStep ? ' active' : '');
-    d.id = 'pip-' + i;
-    row.appendChild(d);
-  }
-}
-
-function updatePips() {
-  for (let i = 0; i < STEPS; i++) {
-    const p = document.getElementById('pip-' + i);
-    if (p) p.className = 'pip' + (i < currentStep ? ' done' : i === currentStep ? ' active' : '');
-  }
-}
-
-async function loadReminders() {
-  const list = document.getElementById('todo-list');
-  const status = document.getElementById('reminder-status');
-  if (list) list.innerHTML = '<div class="loading-row"><div class="spinner"></div>Fetching from jsonbin...</div>';
-  if (status) status.textContent = 'Syncing...';
-  try {
-    const res = await fetch(JSONBIN_URL);
-    const data = await res.json();
-    const raw = data.record && data.record.week ? data.record.week : [];
-    reminders = [];
-    if (typeof raw === 'string') {
-      raw.split('\n').forEach((line, i) => {
-        const t = line.trim();
-        if (t) reminders.push({id:'r'+i, text:t});
-      });
-    } else {
-      raw.forEach((item, i) => {
-        const title = typeof item === 'string' ? item : (item.title || '');
-        if (title.trim()) reminders.push({id:'r'+i, text:title.trim()});
-      });
-    }
-    if (!list) return;
-    if (reminders.length === 0) {
-      list.innerHTML = '<div style="font-size:14px; color:var(--muted); padding:10px 0;">No reminders found. Run your Sync shortcut first.</div>';
-      if (status) status.textContent = '0 reminders';
-      return;
-    }
-    if (status) status.textContent = reminders.length + ' reminders loaded';
-    list.innerHTML = '';
-    reminders.forEach(r => {
-      todoChecked[r.id] = false;
-      const el = document.createElement('div');
-      el.className = 'todo-item';
-      el.id = 'todo-' + r.id;
-      el.innerHTML = '<div class="todo-check" id="check-'+r.id+'"><i class="ti ti-check" style="font-size:12px; display:none;" id="cm-'+r.id+'"></i></div><div class="todo-text">'+r.text+'</div>';
-      el.onclick = () => toggleTodo(r.id);
-      list.appendChild(el);
-    });
-  } catch(e) {
-    if (list) list.innerHTML = '<div style="font-size:14px; color:var(--red); padding:10px 0;">Could not load reminders.</div>';
-    if (status) status.textContent = 'Load failed';
-  }
-}
-
-function toggleTodo(id) {
-  todoChecked[id] = !todoChecked[id];
-  document.getElementById('todo-'+id).classList.toggle('checked', todoChecked[id]);
-  document.getElementById('cm-'+id).style.display = todoChecked[id] ? 'block' : 'none';
-}
-
-function buildESPRatings() {
-  ['1','2','3'].forEach(n => {
-    ['e','s','p'].forEach(dim => {
-      const row = document.getElementById('esp'+n+'-'+dim+'-row');
-      if (!row) return;
-      espRatings['esp'+n+'-'+dim] = 0;
-      for (let i = 1; i <= 5; i++) {
-        const b = document.createElement('button');
-        b.className = 'r-btn'; b.textContent = i;
-        b.onclick = () => setRating(n, dim, i);
-        row.appendChild(b);
+    if(!res.ok)throw new Error('CalDAV '+res.status);
+    const text=await res.text();
+    // Parse VEVENT summaries and dates
+    const events=[];
+    const eventBlocks=text.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g)||[];
+    eventBlocks.forEach(block=>{
+      const summary=(block.match(/SUMMARY[^:]*:(.+)/)||[])[1]?.trim()||'Event';
+      const dtstart=(block.match(/DTSTART[^:]*:(\d+)/)||[])[1]||'';
+      if(dtstart){
+        const y=dtstart.slice(0,4),m=dtstart.slice(4,6),d=dtstart.slice(6,8);
+        const h=dtstart.slice(9,11),min=dtstart.slice(11,13);
+        const dateStr=new Date(y+'-'+m+'-'+d).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+        const timeStr=h?new Date(y+'-'+m+'-'+d+'T'+h+':'+min).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'All day';
+        events.push({sort:dtstart,date:dateStr,time:timeStr,title:summary});
       }
     });
-  });
-}
-
-function setRating(n, dim, val) {
-  espRatings['esp'+n+'-'+dim] = val;
-  const row = document.getElementById('esp'+n+'-'+dim+'-row');
-  Array.from(row.children).forEach((b, i) => b.classList.toggle('sel', i+1 <= val));
-}
-
-function toggleESP() {
-  espCount++;
-  if (espCount >= 2) document.getElementById('esp-event-2').style.display = 'block';
-  if (espCount >= 3) { document.getElementById('esp-event-3').style.display = 'block'; document.getElementById('add-esp-btn').style.display = 'none'; }
-}
-
-function selectMood(btn, val) {
-  selectedMood = val;
-  document.querySelectorAll('#step-0 .mood-btn').forEach(b => b.classList.toggle('selected', b === btn));
-}
-
-function selectWorkout(btn, val) {
-  selectedWorkout = val;
-  document.querySelectorAll('#workout-type-row .mood-btn').forEach(b => b.classList.toggle('selected', b === btn));
-  document.getElementById('workout-fields').style.display = val === 'Rest day' ? 'none' : 'block';
-}
-
-function showStep(n) {
-  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-  document.getElementById('step-'+n).classList.add('active');
-  currentStep = n;
-  updatePips();
-  window.scrollTo(0, 0);
-}
-
-function next() { if (currentStep < STEPS-1) showStep(currentStep+1); else finishDebrief(); }
-function prev() { if (currentStep > 0) showStep(currentStep-1); }
-
-function setTomorrowWorkout() {
-  const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
-  const day = tomorrow.toLocaleDateString('en-US',{weekday:'long'});
-  const hiit = ['Tuesday','Thursday','Sunday'].includes(day);
-  const el = document.getElementById('tomorrow-workout');
-  if (el) el.textContent = hiit ? day+' — HIIT day. Push/upper + cardio. Protect ankles.' : day+' — Rest/skill day. Mobility, breathwork, or light walk.';
-}
-
-function finishDebrief() {
-  document.getElementById('debrief-flow').style.display = 'none';
-  document.getElementById('clear-screen').classList.add('show');
-  const doneCount = Object.values(todoChecked).filter(Boolean).length;
-  const total = reminders.length;
-  document.getElementById('clear-status').textContent = (total > 0 && doneCount === total) ? 'FORGE CLEAR' : 'FORGE CLEAR — items deferred';
-  document.getElementById('clear-sub').textContent = (total > 0 && doneCount === total) ? 'All tasks closed. Chapter sealed. Rest easy.' : doneCount+'/'+total+' tasks done. Deferred items queued for tomorrow.';
-  const cal = parseInt(document.getElementById('cal-in')?.value)||0;
-  const pro = parseInt(document.getElementById('protein')?.value)||0;
-  const dur = document.getElementById('workout-duration')?.value||'';
-  document.getElementById('summary-grid').innerHTML = [
-    {label:'Day feel', val:selectedMood||'—'},
-    {label:'Tasks closed', val:doneCount+'/'+total},
-    {label:'Workout', val:(selectedWorkout||'—')+(dur?' · '+dur+'min':'')},
-    {label:'Calories', val:cal?cal.toLocaleString()+' kcal':'—'},
-    {label:'Protein', val:pro?pro+'g':'—'},
-    {label:'ESP events', val:espCount+''},
-  ].map(i=>'<div class="sum-card"><div class="sum-label">'+i.label+'</div><div class="sum-val">'+i.val+'</div></div>').join('');
-  const espItems = [];
-  for (let n=1; n<=espCount; n++) {
-    const ev = document.getElementById('esp'+n+'-event')?.value;
-    if (ev) espItems.push('<div class="esp-summary-item"><strong>'+ev+'</strong><br><span style="font-size:12px;color:var(--muted);">Effort '+(espRatings['esp'+n+'-e']||'—')+'/5 · Success '+(espRatings['esp'+n+'-s']||'—')+'/5 · Progress '+(espRatings['esp'+n+'-p']||'—')+'/5</span></div>');
+    events.sort((a,b)=>a.sort.localeCompare(b.sort));
+    if(!events.length){el.innerHTML='<div class="cal-empty">🗓 No events in the next 7 days.</div>';return;}
+    const grouped={};
+    events.forEach(ev=>{if(!grouped[ev.date])grouped[ev.date]=[];grouped[ev.date].push(ev);});
+    let html='';
+    Object.keys(grouped).forEach(date=>{
+      html+='<div class="cal-date-header">'+date+'</div>';
+      html+=grouped[date].map(ev=>'<div class="cal-event"><span class="cal-time">'+ev.time+'</span><span class="cal-title">'+ev.title+'</span></div>').join('');
+    });
+    el.innerHTML=html;
+  }catch(e){
+    // Fallback: try data.json from morning brief
+    try{
+      const r=await fetch('https://theseanman.github.io/forge-daily-brief/data.json');
+      const d=await r.json();
+      const events=d?.calendar||[];
+      if(!events.length){el.innerHTML='<div class="cal-empty">🗓 No events found.</div>';return;}
+      const grouped={};
+      events.forEach(ev=>{const k=ev.date||'Unknown';if(!grouped[k])grouped[k]=[];grouped[k].push(ev);});
+      let html='';
+      Object.keys(grouped).forEach(date=>{
+        html+='<div class="cal-date-header">'+date+'</div>';
+        html+=grouped[date].map(ev=>'<div class="cal-event"><span class="cal-time">'+(ev.time||'All day')+'</span><span class="cal-title">'+ev.title+'</span></div>').join('');
+      });
+      el.innerHTML=html;
+    }catch(e2){el.innerHTML='<div class="cal-empty">Calendar unavailable.</div>';}
   }
-  if (espItems.length) { document.getElementById('esp-summary-card').style.display='block'; document.getElementById('esp-summary-list').innerHTML=espItems.join(''); }
-  const carry = document.getElementById('carry')?.value;
-  if (carry) { document.getElementById('carry-card').style.display='block'; document.getElementById('carry-display').textContent=carry; }
+}
+
+function init(){
+  document.getElementById('today-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  buildPips();buildESPRatings();setTomorrowWorkout();loadReminders();
+}
+
+function buildPips(){
+  const row=document.getElementById('progress-pips');row.innerHTML='';
+  for(let i=0;i<STEPS;i++){const d=document.createElement('div');d.className='pip'+(i<currentStep?' done':i===currentStep?' active':'');d.id='pip-'+i;row.appendChild(d);}
+}
+function updatePips(){for(let i=0;i<STEPS;i++){const p=document.getElementById('pip-'+i);if(p)p.className='pip'+(i<currentStep?' done':i===currentStep?' active':'');}}
+
+async function loadReminders(){
+  const list=document.getElementById('todo-list');
+  const status=document.getElementById('reminder-status');
+  if(list)list.innerHTML='<div class="loading-row"><div class="spinner"></div>Fetching reminders...</div>';
+  if(status)status.textContent='Syncing...';
+  try{
+    const res=await fetch(JSONBIN_URL);
+    const data=await res.json();
+    const raw=data.record&&data.record.week?data.record.week:[];
+    reminders=[];
+    if(typeof raw==='string'){raw.split('\n').forEach((line,i)=>{const t=line.trim();if(t)reminders.push({id:'r'+i,text:t});});}
+    else{raw.forEach((item,i)=>{const title=typeof item==='string'?item:(item.title||'');if(title.trim())reminders.push({id:'r'+i,text:title.trim()});});}
+    if(!list)return;
+    if(!reminders.length){list.innerHTML='<div style="font-size:14px;color:var(--muted);padding:10px 0;">No reminders found.</div>';if(status)status.textContent='0 reminders';return;}
+    if(status)status.textContent=reminders.length+' reminders loaded';
+    list.innerHTML='';
+    reminders.forEach(r=>{
+      todoChecked[r.id]=false;
+      const el=document.createElement('div');el.className='todo-item';el.id='todo-'+r.id;
+      el.innerHTML='<div class="todo-check" id="check-'+r.id+'"><i class="ti ti-check" style="font-size:12px;display:none;" id="cm-'+r.id+'"></i></div><div class="todo-text">'+r.text+'</div>';
+      el.onclick=()=>toggleTodo(r.id);list.appendChild(el);
+    });
+  }catch(e){if(list)list.innerHTML='<div style="font-size:14px;color:var(--red);padding:10px 0;">Could not load reminders.</div>';if(status)status.textContent='Load failed';}
+}
+
+function toggleTodo(id){
+  todoChecked[id]=!todoChecked[id];
+  document.getElementById('todo-'+id).classList.toggle('checked',todoChecked[id]);
+  document.getElementById('cm-'+id).style.display=todoChecked[id]?'block':'none';
+}
+
+function buildESPRatings(){
+  ['1','2','3'].forEach(n=>{['e','s','p'].forEach(dim=>{
+    const row=document.getElementById('esp'+n+'-'+dim+'-row');if(!row)return;
+    espRatings['esp'+n+'-'+dim]=0;
+    for(let i=1;i<=5;i++){const b=document.createElement('button');b.className='r-btn';b.textContent=i;b.onclick=()=>setRating(n,dim,i);row.appendChild(b);}
+  });});
+}
+function setRating(n,dim,val){
+  espRatings['esp'+n+'-'+dim]=val;
+  const row=document.getElementById('esp'+n+'-'+dim+'-row');
+  Array.from(row.children).forEach((b,i)=>b.classList.toggle('sel',i+1<=val));
+}
+function toggleESP(){espCount++;if(espCount>=2)document.getElementById('esp-event-2').style.display='block';if(espCount>=3){document.getElementById('esp-event-3').style.display='block';document.getElementById('add-esp-btn').style.display='none';}}
+function selectMood(btn,val){selectedMood=val;document.querySelectorAll('#step-0 .mood-btn').forEach(b=>b.classList.toggle('selected',b===btn));}
+function selectWorkout(btn,val){selectedWorkout=val;document.querySelectorAll('#workout-type-row .mood-btn').forEach(b=>b.classList.toggle('selected',b===btn));document.getElementById('workout-fields').style.display=val==='Rest day'?'none':'block';}
+function showStep(n){document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));document.getElementById('step-'+n).classList.add('active');currentStep=n;updatePips();window.scrollTo(0,0);}
+function next(){if(currentStep<STEPS-1)showStep(currentStep+1);else finishDebrief();}
+function prev(){if(currentStep>0)showStep(currentStep-1);}
+function setTomorrowWorkout(){
+  const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+  const day=tomorrow.toLocaleDateString('en-US',{weekday:'long'});
+  const hiit=['Tuesday','Thursday','Sunday'].includes(day);
+  const el=document.getElementById('tomorrow-workout');
+  if(el)el.textContent=hiit?day+' — HIIT day. Push/upper + cardio. Protect ankles.':day+' — Rest/skill day. Mobility, breathwork, or light walk.';
+}
+function finishDebrief(){
+  document.getElementById('debrief-flow').style.display='none';
+  document.getElementById('clear-screen').classList.add('show');
+  const doneCount=Object.values(todoChecked).filter(Boolean).length;
+  const total=reminders.length;
+  document.getElementById('clear-status').textContent=(total>0&&doneCount===total)?'FORGE CLEAR':'FORGE CLEAR — items deferred';
+  document.getElementById('clear-sub').textContent=(total>0&&doneCount===total)?'All tasks closed. Chapter sealed. Rest easy.':doneCount+'/'+total+' tasks done. Deferred items queued for tomorrow.';
+  const cal=parseInt(document.getElementById('cal-in')?.value)||0;
+  const pro=parseInt(document.getElementById('protein')?.value)||0;
+  const dur=document.getElementById('workout-duration')?.value||'';
+  document.getElementById('summary-grid').innerHTML=[
+    {label:'Day feel',val:selectedMood||'—'},
+    {label:'Tasks closed',val:doneCount+'/'+total},
+    {label:'Workout',val:(selectedWorkout||'—')+(dur?' · '+dur+'min':'')},
+    {label:'Calories',val:cal?cal.toLocaleString()+' kcal':'—'},
+    {label:'Protein',val:pro?pro+'g':'—'},
+    {label:'ESP events',val:espCount+''},
+  ].map(i=>'<div class="sum-card"><div class="sum-label">'+i.label+'</div><div class="sum-val">'+i.val+'</div></div>').join('');
+  const espItems=[];
+  for(let n=1;n<=espCount;n++){const ev=document.getElementById('esp'+n+'-event')?.value;if(ev)espItems.push('<div class="esp-summary-item"><strong>'+ev+'</strong><br><span style="font-size:12px;color:var(--muted);">Effort '+(espRatings['esp'+n+'-e']||'—')+'/5 · Success '+(espRatings['esp'+n+'-s']||'—')+'/5 · Progress '+(espRatings['esp'+n+'-p']||'—')+'/5</span></div>');}
+  if(espItems.length){document.getElementById('esp-summary-card').style.display='block';document.getElementById('esp-summary-list').innerHTML=espItems.join('');}
+  const carry=document.getElementById('carry')?.value;
+  if(carry){document.getElementById('carry-card').style.display='block';document.getElementById('carry-display').textContent=carry;}
   setTomorrowWorkout();
   loadWeather();
   loadCalendar();
 }
-
 init();
 </script>
 </body>
