@@ -408,7 +408,7 @@ async function loadCalendar() {
 
     });
     const data = await res.json();
-    const events = data?.record?.week || data?.record?.tomorrow || data?.record?.today || [];
+    const events = data?.calendar || data?.record?.week || data?.record?.tomorrow || data?.record?.today || [];
     if (!Array.isArray(events) || !events.length) {
       el.innerHTML = '<div class="cal-empty">🗓 No events in the next 7 days.</div>';
       return;
