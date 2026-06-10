@@ -1,406 +1,499 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>FORGE · Reminder Engine</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/tabler-icons.min.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--color-background-tertiary); color: var(--color-text-primary); line-height: 1.6; }
-    
-    :root {
-      --color-background-primary: #ffffff;
-      --color-background-secondary: #f8f8f8;
-      --color-background-tertiary: #f0f0f0;
-      --color-text-primary: #1a1a1a;
-      --color-text-secondary: #666666;
-      --color-text-tertiary: #999999;
-      --color-border-tertiary: rgba(0,0,0,0.08);
-      --color-border-secondary: rgba(0,0,0,0.15);
-      --color-border-primary: rgba(0,0,0,0.25);
-      --color-background-info: #e6f1fb;
-      --color-text-info: #185fa5;
-      --color-background-success: #eaf3de;
-      --color-text-success: #3b6d11;
-      --color-background-warning: #faeeda;
-      --color-text-warning: #854f0b;
-      --border-radius-md: 8px;
-      --border-radius-lg: 12px;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --color-background-primary: #1a1a1a;
-        --color-background-secondary: #2a2a2a;
-        --color-background-tertiary: #0f0f0f;
-        --color-text-primary: #ffffff;
-        --color-text-secondary: #b0b0b0;
-        --color-text-tertiary: #808080;
-        --color-border-tertiary: rgba(255,255,255,0.08);
-        --color-border-secondary: rgba(255,255,255,0.15);
-        --color-border-primary: rgba(255,255,255,0.25);
-        --color-background-info: #0c447c;
-        --color-text-info: #85b7eb;
-        --color-background-success: #27500a;
-        --color-text-success: #97c459;
-        --color-background-warning: #633806;
-        --color-text-warning: #ef9f27;
-      }
-    }
-    
-    .container { max-width: 100%; padding: 0; background: var(--color-background-primary); min-height: 100vh; }
-    .header { background: var(--color-background-primary); border-bottom: 0.5px solid var(--color-border-tertiary); padding: 1rem; position: sticky; top: 0; z-index: 10; }
-    .header h1 { font-size: 18px; font-weight: 500; margin-bottom: 1rem; letter-spacing: -0.5px; }
-    
-    .tabs { display: flex; gap: 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
-    .tab-button { flex: 1; padding: 12px; text-align: center; background: none; border: none; font-size: 14px; font-weight: 500; color: var(--color-text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.15s; }
-    .tab-button.active { color: var(--color-text-primary); border-bottom-color: var(--color-text-primary); }
-    .tab-button:hover { color: var(--color-text-primary); }
-    
-    .content { padding: 1rem; }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-    
-    .reminder-item { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px 12px; margin-bottom: 12px; display: flex; gap: 12px; align-items: flex-start; }
-    .reminder-item.completed { opacity: 0.6; }
-    .reminder-item.completed .reminder-text { text-decoration: line-through; }
-    
-    .reminder-checkbox { width: 20px; height: 20px; border: 0.5px solid var(--color-border-secondary); border-radius: 4px; cursor: pointer; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--color-text-success); }
-    .reminder-checkbox:hover { border-color: var(--color-border-primary); }
-    .reminder-item.completed .reminder-checkbox { background: var(--color-background-success); border-color: var(--color-text-success); }
-    
-    .reminder-body { flex: 1; min-width: 0; }
-    .reminder-text { font-size: 14px; word-break: break-word; margin-bottom: 6px; }
-    .reminder-controls { display: flex; gap: 6px; flex-wrap: wrap; }
-    .freq-badge { font-size: 11px; padding: 4px 8px; background: var(--color-background-info); color: var(--color-text-info); border-radius: 4px; cursor: pointer; border: 0.5px solid var(--color-border-tertiary); transition: all 0.15s; }
-    .freq-badge:hover { border-color: var(--color-border-secondary); }
-    .freq-badge.active { background: var(--color-text-info); color: var(--color-background-info); }
-    
-    .delete-btn { width: 28px; height: 28px; background: none; border: 0.5px solid var(--color-border-tertiary); border-radius: 4px; cursor: pointer; color: var(--color-text-secondary); display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.15s; flex-shrink: 0; }
-    .delete-btn:hover { border-color: #e24b4a; color: #e24b4a; }
-    
-    .input-group { margin-bottom: 1rem; }
-    .input-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--color-text-secondary); }
-    input[type="text"], input[type="password"], textarea { width: 100%; padding: 10px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); font-size: 14px; font-family: inherit; }
-    input:hover, textarea:hover { border-color: var(--color-border-primary); }
-    input:focus, textarea:focus { outline: none; border-color: var(--color-text-info); }
-    
-    textarea { resize: vertical; min-height: 100px; font-family: var(--font-mono, monospace); }
-    
-    .button { padding: 10px 16px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-primary); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
-    .button:hover { background: var(--color-background-tertiary); border-color: var(--color-border-primary); }
-    .button:active { transform: scale(0.98); }
-    
-    .button.primary { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-tertiary); }
-    .button.primary:hover { background: #d6e8f7; }
-    
-    .status-msg { padding: 12px; border-radius: var(--border-radius-md); font-size: 13px; margin: 12px 0; word-break: break-word; }
-    .status-msg.success { background: var(--color-background-success); color: var(--color-text-success); }
-    .status-msg.error { background: #fcebeb; color: #a32d2d; }
-    .status-msg.info { background: var(--color-background-info); color: var(--color-text-info); }
-    .status-msg.loading { background: var(--color-background-warning); color: var(--color-text-warning); }
-    
-    .empty-state { text-align: center; padding: 2rem 1rem; color: var(--color-text-secondary); }
-    .empty-state p { font-size: 14px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FORGE Reminder Engine 🌴</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  min-height:100vh;
+  background:linear-gradient(160deg,#ffc107 0%,#ff8f00 25%,#e65100 60%,#bf360c 100%);
+  position:relative;overflow-x:hidden;
+}
+/* Pool & palms */
+.pool{position:fixed;bottom:0;left:0;right:0;height:64px;background:linear-gradient(180deg,#00acc1,#006064);z-index:0;pointer-events:none}
+.shimmer{position:fixed;bottom:16px;left:0;right:0;height:6px;background:repeating-linear-gradient(90deg,transparent 0,rgba(255,255,255,.25) 12px,transparent 24px);z-index:0;pointer-events:none}
+.palm{position:fixed;bottom:0;z-index:0;pointer-events:none}
+.palm-r{right:0;transform:scaleX(-1)}
+/* Layout */
+.wrap{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:16px 14px 110px}
+.hdr{text-align:center;margin-bottom:18px;padding-top:8px}
+.hdr h1{font-size:26px;font-weight:800;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.4);letter-spacing:-.3px}
+.hdr-sub{font-size:13px;color:rgba(255,255,255,.85);margin-top:3px}
+/* Tabs */
+.tabs{display:flex;background:rgba(0,0,0,.28);border-radius:13px;padding:4px;margin-bottom:18px}
+.tab{flex:1;padding:10px 6px;text-align:center;border-radius:10px;font-size:14px;font-weight:700;color:rgba(255,255,255,.65);cursor:pointer;border:none;background:transparent;transition:all .2s}
+.tab.on{background:rgba(255,255,255,.95);color:#d84315}
+/* Cards */
+.card{background:rgba(255,248,225,.95);border-radius:18px;padding:16px;margin-bottom:16px;box-shadow:0 4px 24px rgba(0,0,0,.22)}
+.card-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#bf360c;margin-bottom:12px}
+/* Reminder items */
+.ri{padding:12px;background:rgba(255,255,255,.82);border-radius:11px;margin-bottom:10px;border-left:4px solid #ffc107}
+.ri.action{border-left-color:#d84315}
+.ri-text{font-size:16px;color:#3e1a00;line-height:1.45;margin-bottom:10px}
+.ri-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.freq-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:6px}
+.fb-daily{background:#e3f2fd;color:#1565c0}
+.fb-often{background:#f3e5f5;color:#6a1b9a}
+.fb-weekly{background:#e8eaf6;color:#283593}
+.fb-rotation{background:#f5f5f5;color:#555;border:1px solid #ddd}
+/* Buttons */
+.btn{padding:6px 11px;border-radius:8px;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:transform .12s,opacity .12s}
+.btn:active{transform:scale(.94);opacity:.85}
+.b-keep{background:#e8f5e9;color:#2e7d32}
+.b-snooze{background:#fff3e0;color:#e65100}
+.b-del{background:#ffebee;color:#c62828}
+.b-type{background:#e3f2fd;color:#1565c0}
+select.freq-sel{padding:5px 8px;border-radius:8px;border:1px solid #f0d080;background:#fff;font-size:13px;font-weight:700;color:#3e1a00}
+/* Checkboxes */
+.ci{display:flex;align-items:flex-start;gap:10px;padding:11px;background:rgba(255,255,255,.82);border-radius:11px;margin-bottom:8px}
+.ci input[type=checkbox]{width:22px;height:22px;margin-top:1px;accent-color:#d84315;flex-shrink:0;cursor:pointer}
+.ci label{font-size:16px;color:#3e1a00;line-height:1.4;cursor:pointer}
+.ci.done label{text-decoration:line-through;color:#aaa}
+/* Empty */
+.empty{text-align:center;padding:28px 12px;color:#9e6500;font-size:15px;line-height:1.6}
+/* Settings inputs */
+.s-label{font-size:12px;font-weight:800;color:#9e6500;text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px}
+.s-group{margin-bottom:20px}
+input[type=text],input[type=password],textarea{width:100%;padding:12px;border-radius:11px;border:1.5px solid #f0d080;background:rgba(255,255,255,.92);font-size:15px;color:#3e1a00;outline:none;font-family:inherit}
+input[type=text]:focus,input[type=password]:focus,textarea:focus{border-color:#ffc107}
+textarea{height:100px;resize:vertical}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,#ffc107,#d84315);color:#fff;font-size:16px;font-weight:800;border:none;border-radius:13px;cursor:pointer;margin-top:8px;box-shadow:0 4px 18px rgba(216,67,21,.4);transition:transform .12s}
+.btn-primary:active{transform:scale(.97)}
+.btn-sec{width:100%;padding:12px;background:rgba(255,255,255,.9);color:#d84315;font-size:15px;font-weight:700;border:2px solid #d84315;border-radius:12px;cursor:pointer;margin-top:8px}
+.btn-sec.danger{color:#c62828;border-color:#c62828}
+/* Stats */
+.stats{display:flex;gap:10px;margin-bottom:14px}
+.stat{flex:1;text-align:center;background:rgba(255,255,255,.75);border-radius:11px;padding:10px 4px}
+.stat-n{font-size:24px;font-weight:900;color:#d84315}
+.stat-l{font-size:11px;color:#9e6500;font-weight:700;text-transform:uppercase}
+/* Search */
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap input{padding-left:36px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none}
+/* Filter row */
+.filter-row{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.filt{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;border:none;cursor:pointer;opacity:.5;transition:opacity .15s}
+.filt.on{opacity:1}
+.fa{background:#f5f5f5;color:#555}
+.fm{background:#e3f2fd;color:#1565c0}
+.fx{background:#ffebee;color:#c62828}
+/* Toast */
+.toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);background:rgba(20,10,0,.9);color:#ffc107;padding:10px 22px;border-radius:22px;font-size:14px;font-weight:700;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+/* Panels */
+.panel{display:none}.panel.on{display:block}
+/* Progress note */
+.sync-note{font-size:13px;color:#9e6500;margin-bottom:10px;line-height:1.5}
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>⬡ FORGE · Reminder Engine</h1>
-      <div class="tabs">
-        <button class="tab-button active" data-tab="today">Today</button>
-        <button class="tab-button" data-tab="library">Library</button>
-        <button class="tab-button" data-tab="settings">Settings</button>
-      </div>
+
+<!-- Decorations -->
+<div class="pool"></div>
+<div class="shimmer"></div>
+<svg class="palm palm-l" width="110" height="190" viewBox="0 0 110 190">
+  <path d="M52 190 Q48 145 44 95 Q42 55 50 18" stroke="#5e3712" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <path d="M50 18 Q18 2 0 12" stroke="#1d7a40" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M50 18 Q28 -8 8 -2" stroke="#1d7a40" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M50 18 Q72 2 92 14" stroke="#1d7a40" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M50 18 Q62 -4 88 2" stroke="#1d7a40" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M50 18 Q38 34 18 28" stroke="#1d7a40" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <circle cx="50" cy="20" r="5" fill="#5e3712"/>
+  <circle cx="44" cy="16" r="4" fill="#5e3712"/>
+</svg>
+<svg class="palm palm-r" width="110" height="190" viewBox="0 0 110 190">
+  <path d="M52 190 Q48 145 44 95 Q42 55 50 18" stroke="#5e3712" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <path d="M50 18 Q18 2 0 12" stroke="#1d7a40" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M50 18 Q28 -8 8 -2" stroke="#1d7a40" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M50 18 Q72 2 92 14" stroke="#1d7a40" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M50 18 Q62 -4 88 2" stroke="#1d7a40" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M50 18 Q38 34 18 28" stroke="#1d7a40" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <circle cx="50" cy="20" r="5" fill="#5e3712"/>
+  <circle cx="44" cy="16" r="4" fill="#5e3712"/>
+</svg>
+
+<div class="wrap">
+  <div class="hdr">
+    <h1>🌴 FORGE Reminder Engine</h1>
+    <div class="hdr-sub" id="dateLine"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" onclick="switchTab('today',this)">Today</button>
+    <button class="tab" onclick="switchTab('library',this)">Library</button>
+    <button class="tab" onclick="switchTab('settings',this)">Settings</button>
+  </div>
+
+  <!-- TODAY -->
+  <div class="panel on" id="panel-today">
+    <div class="card">
+      <div class="card-title">🧘 Today's Mindful</div>
+      <div id="mindfulList"></div>
     </div>
-    
-    <div class="content">
-      <div id="today" class="tab-panel active">
-        <div id="today-list"></div>
-      </div>
-      
-      <div id="library" class="tab-panel">
-        <div id="library-list"></div>
-      </div>
-      
-      <div id="settings" class="tab-panel">
-        <div class="input-group">
-          <label>Jsonbin Master Key</label>
-          <input type="password" id="master-key" placeholder="Paste your jsonbin master key here">
-          <p style="font-size: 12px; color: var(--color-text-tertiary); margin-top: 6px;">Your key is stored locally in your browser. It never leaves your device.</p>
-        </div>
-        
-        <button class="button primary" onclick="saveSettings()">Save & Sync from Jsonbin</button>
-        
-        <div id="sync-status" style="margin-top: 1rem;"></div>
-        
-        <div style="border-top: 0.5px solid var(--color-border-tertiary); margin-top: 2rem; padding-top: 1.5rem;">
-          <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 12px;">Paste Reminders</h3>
-          <textarea id="paste-reminders" placeholder="Paste your reminders here (one per line, no bullets needed)"></textarea>
-          <button class="button" onclick="importReminders()" style="margin-top: 12px;">Add Pasted Reminders</button>
-        </div>
-      </div>
+    <div class="card">
+      <div class="card-title">⚡ This Week's Actions</div>
+      <div id="actionList"></div>
     </div>
   </div>
 
-  <script>
-    const JSONBIN_BIN_ID = '6a1f705cda38895dfe7e4f97';
-    const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
-    
-    let reminders = [];
-    let todaySelection = [];
-    
-    function loadFromStorage() {
-      const stored = localStorage.getItem('forge-reminders');
-      reminders = stored ? JSON.parse(stored) : [];
-      const todayStored = localStorage.getItem('forge-today');
-      todaySelection = todayStored ? JSON.parse(todayStored) : [];
-    }
-    
-    function saveToStorage() {
-      localStorage.setItem('forge-reminders', JSON.stringify(reminders));
-      localStorage.setItem('forge-today', JSON.stringify(todaySelection));
-    }
-    
-    function getMasterKey() {
-      return localStorage.getItem('forge-master-key');
-    }
-    
-    async function syncToJsonbin() {
-      const key = getMasterKey();
-      if (!key) {
-        console.log('No master key set, skipping sync');
-        return;
-      }
-      
-      try {
-        const response = await fetch(JSONBIN_URL, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Master-Key': key
-          },
-          body: JSON.stringify({ reminders, todaySelection, lastSync: new Date().toISOString() })
-        });
-        
-        if (!response.ok) throw new Error(`Sync failed: ${response.status}`);
-      } catch (err) {
-        console.error('Jsonbin sync error:', err);
-      }
-    }
-    
-    async function syncFromJsonbin() {
-      const key = getMasterKey();
-      if (!key) {
-        showStatus('No master key set', 'error');
-        return false;
-      }
-      
-      try {
-        showStatus('Connecting to jsonbin...', 'loading');
-        
-        const response = await fetch(JSONBIN_URL, {
-          method: 'GET',
-          headers: { 'X-Master-Key': key }
-        });
-        
-        console.log(`Fetch response status: ${response.status}`);
-        
-        if (response.status === 401 || response.status === 403) {
-          showStatus('Auth failed: your master key is incorrect or expired', 'error');
-          return false;
-        }
-        
-        if (!response.ok) {
-          showStatus(`Server error: ${response.status} ${response.statusText}`, 'error');
-          return false;
-        }
-        
-        const data = await response.json();
-        console.log('Jsonbin data loaded:', data);
-        
-        const existingReminders = data.record?.reminders || [];
-        const weekString = data.record?.week || '';
-        if (existingReminders.length > 0) {
-          reminders = existingReminders;
-        } else if (weekString) {
-          const lines = weekString.split('\n').map(l => l.trim()).filter(l => l);
-          reminders = lines.map(line => ({
-            id: 'reminder-' + Date.now() + '-' + Math.random(),
-            text: line.replace(/^[-•*]\s*/, ''),
-            frequency: 'Rotation',
-            completed: false,
-            addedAt: new Date().toISOString()
-          }));
-        } else {
-          reminders = [];
-        }
-        todaySelection = data.record?.todaySelection || [];
-        saveToStorage();
-        showStatus('Synced ✓ — ' + reminders.length + ' reminders loaded', 'success');
-        renderAll();
-        return true;
-      } catch (err) {
-        console.error('Sync error:', err);
-        showStatus(`Error: ${err.message}`, 'error');
-        return false;
-      }
-    }
-    
-    function saveSettings() {
-      const key = document.getElementById('master-key').value.trim();
-      if (!key) {
-        showStatus('Enter your master key', 'error');
-        return;
-      }
-      localStorage.setItem('forge-master-key', key);
-      showStatus('Key saved, syncing...', 'loading');
-      syncFromJsonbin();
-    }
-    
-    function showStatus(msg, type) {
-      const el = document.getElementById('sync-status');
-      el.innerHTML = `<div class="status-msg ${type}">${msg}</div>`;
-      console.log(`[${type.toUpperCase()}] ${msg}`);
-    }
-    
-    function importReminders() {
-      const text = document.getElementById('paste-reminders').value.trim();
-      if (!text) return;
-      
-      const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-      const newIds = [];
-      
-      lines.forEach(line => {
-        const id = `reminder-${Date.now()}-${Math.random()}`;
-        reminders.push({
-          id,
-          text: line.replace(/^[-•*]\s*/, ''),
-          frequency: 'Rotation',
-          completed: false,
-          addedAt: new Date().toISOString()
-        });
-        newIds.push(id);
-      });
-      
-      saveToStorage();
-      syncToJsonbin();
-      document.getElementById('paste-reminders').value = '';
-      showStatus(`Added ${newIds.length} reminders`, 'success');
-      renderAll();
-    }
-    
-    function toggleReminder(id) {
-      const reminder = reminders.find(r => r.id === id);
-      if (reminder) {
-        reminder.completed = !reminder.completed;
-        saveToStorage();
-        syncToJsonbin();
-        renderAll();
-      }
-    }
-    
-    function setFrequency(id, freq) {
-      const reminder = reminders.find(r => r.id === id);
-      if (reminder) {
-        reminder.frequency = reminder.frequency === freq ? 'Rotation' : freq;
-        saveToStorage();
-        syncToJsonbin();
-        renderAll();
-      }
-    }
-    
-    function deleteReminder(id) {
-      reminders = reminders.filter(r => r.id !== id);
-      todaySelection = todaySelection.filter(i => i !== id);
-      saveToStorage();
-      syncToJsonbin();
-      renderAll();
-    }
-    
-    function renderReminder(reminder, isToday = false) {
-      const freqs = ['Daily', 'Often', 'Weekly', 'Rotation'];
-      return `
-        <div class="reminder-item ${reminder.completed ? 'completed' : ''}">
-          <div class="reminder-checkbox" onclick="toggleReminder('${reminder.id}')">
-            ${reminder.completed ? '✓' : ''}
-          </div>
-          <div class="reminder-body">
-            <div class="reminder-text">${escapeHtml(reminder.text)}</div>
-            <div class="reminder-controls">
-              ${freqs.map(f => `
-                <button class="freq-badge ${reminder.frequency === f ? 'active' : ''}" onclick="setFrequency('${reminder.id}', '${f}')">${f}</button>
-              `).join('')}
-            </div>
-          </div>
-          <button class="delete-btn" onclick="deleteReminder('${reminder.id}')">✕</button>
+  <!-- LIBRARY -->
+  <div class="panel" id="panel-library">
+    <div class="card">
+      <div class="stats">
+        <div class="stat"><div class="stat-n" id="sTotal">0</div><div class="stat-l">Total</div></div>
+        <div class="stat"><div class="stat-n" id="sMindful">0</div><div class="stat-l">Mindful</div></div>
+        <div class="stat"><div class="stat-n" id="sAction">0</div><div class="stat-l">Actions</div></div>
+      </div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search reminders…" oninput="renderLib()">
+      </div>
+      <div class="filter-row">
+        <button class="filt fa on" id="fAll" onclick="setFilter('all',this)">All</button>
+        <button class="filt fm" id="fMindful" onclick="setFilter('mindful',this)">Mindful</button>
+        <button class="filt fx" id="fAction" onclick="setFilter('action',this)">Actions</button>
+      </div>
+      <div id="libList"></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="panel" id="panel-settings">
+    <div class="card">
+
+      <div class="s-group">
+        <div class="s-label">JSONBin Master Key</div>
+        <input type="password" id="keyInput" placeholder="Paste your master key…">
+        <button class="btn-primary" onclick="saveKey()">💾 Save Key</button>
+      </div>
+
+      <div class="s-group">
+        <div class="s-label">Sync from iPhone Reminders</div>
+        <p class="sync-note">1. Run <strong>"Sync FORGE Reminders"</strong> Shortcut on your iPhone.<br>2. Tap Pull below — new reminders land as Actions by default. Move to Mindful in Library.</p>
+        <div style="display:flex;gap:8px">
+          <select id="pullType" style="flex:1;padding:12px;border-radius:11px;border:1.5px solid #f0d080;background:#fff;font-size:14px;font-weight:700;color:#3e1a00">
+            <option value="action">Import as Actions</option>
+            <option value="mindful">Import as Mindful</option>
+          </select>
+          <button class="btn-primary" style="flex:1;margin:0" onclick="pullJsonbin()">☁️ Pull</button>
         </div>
-      `;
-    }
-    
-    function renderToday() {
-      const el = document.getElementById('today-list');
-      const dailyReminders = reminders.filter(r => r.frequency === 'Daily' && !r.completed);
-      const oftenReminders = reminders.filter(r => r.frequency === 'Often' && !r.completed);
-      const weeklyReminders = reminders.filter(r => r.frequency === 'Weekly' && !r.completed);
-      
-      const todayReminders = [...dailyReminders, ...oftenReminders.slice(0, 2), ...weeklyReminders.slice(0, 1)];
-      
-      if (todayReminders.length === 0) {
-        el.innerHTML = '<div class="empty-state"><p>No reminders for today</p></div>';
-        return;
-      }
-      
-      el.innerHTML = todayReminders.map(r => renderReminder(r, true)).join('');
-    }
-    
-    function renderLibrary() {
-      const el = document.getElementById('library-list');
-      const active = reminders.filter(r => !r.completed);
-      
-      if (active.length === 0) {
-        el.innerHTML = '<div class="empty-state"><p>No active reminders</p></div>';
-        return;
-      }
-      
-      el.innerHTML = active.map(r => renderReminder(r, false)).join('');
-    }
-    
-    function renderAll() {
-      renderToday();
-      renderLibrary();
-    }
-    
-    function escapeHtml(text) {
-      const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
-      return text.replace(/[&<>"']/g, m => map[m]);
-    }
-    
-    document.querySelectorAll('.tab-button').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        e.target.classList.add('active');
-        const tabId = e.target.dataset.tab;
-        document.getElementById(tabId).classList.add('active');
-      });
+      </div>
+
+      <div class="s-group">
+        <div class="s-label">Paste Reminders Manually</div>
+        <textarea id="pasteArea" placeholder="One reminder per line…"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <select id="pasteType" style="flex:1;padding:12px;border-radius:11px;border:1.5px solid #f0d080;background:#fff;font-size:14px;font-weight:700;color:#3e1a00">
+            <option value="mindful">Mindful (book notes)</option>
+            <option value="action">Action (this week)</option>
+          </select>
+          <button class="btn-primary" style="flex:1;margin:0" onclick="importPasted()">Import</button>
+        </div>
+      </div>
+
+      <div class="s-group">
+        <div class="s-label">Maintenance</div>
+        <button class="btn-sec" onclick="resetToday()">🔄 Refresh Today's Mindful</button>
+        <button class="btn-sec" onclick="clearDone()">✅ Clear Completed Actions</button>
+        <button class="btn-sec danger" onclick="nukeAll()">⚠️ Wipe All Data</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────
+const KEY = 'forge_re_v3';
+const BIN  = '6a1f705cda38895dfe7e4f97';
+const TODAY = ()=> new Date().toISOString().slice(0,10);
+
+let S = {
+  reminders:   [],   // {id,text,type,frequency,lastShown,snoozedUntil,done,deleted}
+  masterKey:   '',
+  todayDate:   '',
+  todayMindful:[], // ids surfaced today
+  checks:      {}  // {id:bool} action checkbox state
+};
+let libFilter = 'all';
+
+// ─── STORAGE ──────────────────────────────────────────────────────────────
+function persist(){ localStorage.setItem(KEY, JSON.stringify(S)); }
+function hydrate(){
+  try{ const r=localStorage.getItem(KEY); if(r) S={...S,...JSON.parse(r)}; }catch(e){}
+  if(S.masterKey) document.getElementById('keyInput').value=S.masterKey;
+}
+
+// ─── DATA PARSING ─────────────────────────────────────────────────────────
+// Handles every format the iOS Shortcut or jsonbin can produce:
+//   {"record":{"week":"line1\nline2\n..."}}   ← iOS Shortcut format
+//   {"reminders":[...]}
+//   plain array
+//   any nested structure with strings
+function extractStrings(raw){
+  if(!raw) return [];
+  // unwrap jsonbin /latest envelope
+  const data = raw.record ?? raw;
+  // iOS Shortcut format: {week:"line1\nline2\n..."}
+  if(data?.week && typeof data.week==='string'){
+    return data.week.split('\n').map(s=>s.trim()).filter(Boolean);
+  }
+  // reminders array
+  if(Array.isArray(data?.reminders)){
+    return data.reminders.map(r=>typeof r==='string'?r:(r.title||r.text||r.name||'')).filter(Boolean);
+  }
+  // plain array
+  if(Array.isArray(data)){
+    return data.map(r=>typeof r==='string'?r:(r.title||r.text||r.name||'')).filter(Boolean);
+  }
+  // deep dig — collect all strings
+  const out=new Set();
+  function dig(o){
+    if(typeof o==='string'&&o.trim().length>2){
+      o.split('\n').forEach(s=>{if(s.trim().length>2) out.add(s.trim());});
+    } else if(Array.isArray(o)){ o.forEach(dig); }
+    else if(o&&typeof o==='object'){ Object.values(o).forEach(dig); }
+  }
+  dig(data);
+  return [...out];
+}
+
+function uid(){ return Math.random().toString(36).slice(2)+Date.now().toString(36); }
+
+function ingest(strings, type){
+  const existing=new Set(S.reminders.map(r=>r.text.toLowerCase().trim()));
+  let n=0;
+  strings.forEach(text=>{
+    const t=text.trim();
+    if(t.length<3||existing.has(t.toLowerCase())) return;
+    S.reminders.push({
+      id:uid(), text:t, type,
+      frequency: type==='mindful'?'rotation':'action',
+      lastShown:0, snoozedUntil:0, done:false, deleted:false
     });
-    
-    const keyInput = document.getElementById('master-key');
-    const stored = localStorage.getItem('forge-master-key');
-    if (stored) {
-      keyInput.value = stored;
-    }
-    
-    loadFromStorage();
-    renderAll();
-  </script>
+    existing.add(t.toLowerCase());
+    n++;
+  });
+  return n;
+}
+
+// ─── JSONBIN ──────────────────────────────────────────────────────────────
+async function pullJsonbin(){
+  if(!S.masterKey){ toast('⚠️ Save your master key first'); return; }
+  const type=document.getElementById('pullType').value;
+  toast('☁️ Pulling from JSONBin…');
+  try{
+    const res=await fetch(`https://api.jsonbin.io/v3/b/${BIN}/latest`,{
+      headers:{'X-Master-Key':S.masterKey}
+    });
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json=await res.json();
+    const strings=extractStrings(json);
+    if(!strings.length){ toast('⚠️ JSONBin empty or format unrecognised'); return; }
+    const added=ingest(strings,type);
+    persist(); renderAll();
+    toast(`✅ ${added} new added (${strings.length} found in JSONBin)`);
+  }catch(e){ toast(`❌ ${e.message}`); }
+}
+
+// ─── TODAY LOGIC ──────────────────────────────────────────────────────────
+function eligible(r){
+  if(r.deleted||r.done) return false;
+  if(r.snoozedUntil>Date.now()) return false;
+  const day=86400000;
+  if(r.frequency==='daily') return true;
+  if(r.frequency==='often') return Date.now()-r.lastShown>day*2;
+  if(r.frequency==='weekly') return Date.now()-r.lastShown>day*7;
+  return true; // rotation
+}
+
+function getTodayMindful(){
+  if(S.todayDate===TODAY()&&S.todayMindful.length){
+    const valid=S.reminders.filter(r=>S.todayMindful.includes(r.id)&&!r.deleted);
+    if(valid.length) return valid;
+  }
+  S.todayDate=TODAY();
+  const pool=S.reminders.filter(r=>r.type==='mindful'&&eligible(r));
+  pool.sort((a,b)=>a.lastShown-b.lastShown);
+  const daily=pool.filter(r=>r.frequency==='daily').slice(0,2);
+  const others=pool.filter(r=>r.frequency!=='daily');
+  for(let i=others.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [others[i],others[j]]=[others[j],others[i]];
+  }
+  const sel=[...daily,...others].slice(0,5);
+  S.todayMindful=sel.map(r=>r.id);
+  sel.forEach(r=>r.lastShown=Date.now());
+  persist();
+  return sel;
+}
+
+function getActions(){
+  return S.reminders.filter(r=>r.type==='action'&&!r.deleted&&!r.done);
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────
+function renderAll(){ renderToday(); renderLib(); updateStats(); }
+
+function renderToday(){
+  // Mindful
+  const mindful=getTodayMindful();
+  const ml=document.getElementById('mindfulList');
+  ml.innerHTML=mindful.length ? mindful.map(r=>`
+    <div class="ri" id="ri_${r.id}">
+      <span class="freq-badge fb-${r.frequency||'rotation'}">${r.frequency||'rotation'}</span>
+      <div class="ri-text">${esc(r.text)}</div>
+      <div class="ri-row">
+        <select class="freq-sel" onchange="setFreq('${r.id}',this.value)">
+          <option value="daily"    ${r.frequency==='daily'   ?'selected':''}>Daily</option>
+          <option value="often"    ${r.frequency==='often'   ?'selected':''}>Often</option>
+          <option value="weekly"   ${r.frequency==='weekly'  ?'selected':''}>Weekly</option>
+          <option value="rotation" ${r.frequency==='rotation'?'selected':''}>Rotation</option>
+        </select>
+        <button class="btn b-snooze" onclick="snoozeIt('${r.id}')">😴 Snooze</button>
+        <button class="btn b-del"   onclick="delIt('${r.id}')">🗑</button>
+      </div>
+    </div>`).join('')
+  : `<div class="empty">🌴 No mindful reminders yet.<br>Pull from JSONBin in Settings to get started.</div>`;
+
+  // Actions
+  const acts=getActions();
+  const al=document.getElementById('actionList');
+  al.innerHTML=acts.length ? acts.map(r=>`
+    <div class="ci ${S.checks[r.id]?'done':''}" id="ci_${r.id}">
+      <input type="checkbox" id="chk_${r.id}" ${S.checks[r.id]?'checked':''} onchange="checkIt('${r.id}',this.checked)">
+      <label for="chk_${r.id}">${esc(r.text)}</label>
+    </div>`).join('')
+  : `<div class="empty">✅ No actions this week.<br>Pull from JSONBin or paste some in Settings.</div>`;
+}
+
+function renderLib(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  let items=S.reminders.filter(r=>!r.deleted);
+  if(libFilter!=='all') items=items.filter(r=>r.type===libFilter);
+  if(q) items=items.filter(r=>r.text.toLowerCase().includes(q));
+  const el=document.getElementById('libList');
+  if(!items.length){ el.innerHTML=`<div class="empty">Nothing here yet.</div>`; return; }
+  el.innerHTML=items.slice(0,120).map(r=>`
+    <div class="ri ${r.type==='action'?'action':''}" style="margin-bottom:9px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <span style="font-size:11px;font-weight:800;color:${r.type==='mindful'?'#e65100':'#c62828'};text-transform:uppercase">${r.type}</span>
+        <div style="display:flex;gap:5px">
+          <button class="btn b-type" style="padding:3px 9px;font-size:11px" onclick="flipType('${r.id}')">${r.type==='mindful'?'→ Action':'→ Mindful'}</button>
+          <button class="btn b-del"  style="padding:3px 9px;font-size:11px" onclick="delIt('${r.id}')">🗑</button>
+        </div>
+      </div>
+      <div style="font-size:15px;color:#3e1a00;line-height:1.4">${esc(r.text)}</div>
+      ${r.type==='mindful'?`<select class="freq-sel" style="margin-top:7px" onchange="setFreq('${r.id}',this.value)">
+        <option value="daily"    ${r.frequency==='daily'   ?'selected':''}>Daily</option>
+        <option value="often"    ${r.frequency==='often'   ?'selected':''}>Often</option>
+        <option value="weekly"   ${r.frequency==='weekly'  ?'selected':''}>Weekly</option>
+        <option value="rotation" ${r.frequency==='rotation'?'selected':''}>Rotation</option>
+      </select>`:''}
+    </div>`).join('');
+  if(items.length>120) el.innerHTML+=`<div style="text-align:center;color:#9e6500;font-size:13px;padding:12px">Showing 120 of ${items.length} — use search to narrow down</div>`;
+}
+
+function updateStats(){
+  const a=S.reminders.filter(r=>!r.deleted);
+  document.getElementById('sTotal').textContent=a.length;
+  document.getElementById('sMindful').textContent=a.filter(r=>r.type==='mindful').length;
+  document.getElementById('sAction').textContent=a.filter(r=>r.type==='action').length;
+}
+
+// ─── ACTIONS ──────────────────────────────────────────────────────────────
+function setFreq(id,f){
+  const r=S.reminders.find(r=>r.id===id);
+  if(r){r.frequency=f;persist();renderAll();}
+}
+function snoozeIt(id){
+  const r=S.reminders.find(r=>r.id===id);
+  if(r){
+    r.snoozedUntil=Date.now()+86400000*2;
+    S.todayMindful=S.todayMindful.filter(i=>i!==id);
+    persist();renderToday();toast('😴 Snoozed 2 days');
+  }
+}
+function delIt(id){
+  const r=S.reminders.find(r=>r.id===id);
+  if(r){r.deleted=true;S.todayMindful=S.todayMindful.filter(i=>i!==id);persist();renderAll();toast('🗑 Removed');}
+}
+function checkIt(id,v){
+  S.checks[id]=v;
+  const el=document.getElementById('ci_'+id);
+  if(el) el.classList.toggle('done',v);
+  persist();
+}
+function flipType(id){
+  const r=S.reminders.find(r=>r.id===id);
+  if(r){
+    r.type=r.type==='mindful'?'action':'mindful';
+    r.frequency=r.type==='mindful'?'rotation':'action';
+    persist();renderAll();toast('✅ Type changed');
+  }
+}
+function importPasted(){
+  const text=document.getElementById('pasteArea').value.trim();
+  const type=document.getElementById('pasteType').value;
+  if(!text){toast('⚠️ Nothing to import');return;}
+  const n=ingest(text.split('\n'),type);
+  document.getElementById('pasteArea').value='';
+  persist();renderAll();toast(`✅ ${n} reminders added`);
+}
+function saveKey(){
+  const k=document.getElementById('keyInput').value.trim();
+  if(!k){toast('⚠️ Paste your key first');return;}
+  S.masterKey=k;persist();toast('✅ Key saved');
+}
+function resetToday(){S.todayDate='';S.todayMindful=[];persist();renderToday();toast('🔄 Today refreshed');}
+function clearDone(){
+  const n=S.reminders.filter(r=>r.type==='action'&&r.done).length;
+  S.reminders=S.reminders.filter(r=>!(r.type==='action'&&r.done));
+  const checked=Object.keys(S.checks).filter(id=>S.checks[id]);
+  checked.forEach(id=>{ S.reminders=S.reminders.filter(r=>r.id!==id); delete S.checks[id]; });
+  persist();renderAll();toast(`✅ Cleared completed actions`);
+}
+function nukeAll(){
+  if(!confirm('Wipe ALL data? Cannot be undone.')) return;
+  S={...S,reminders:[],todayMindful:[],todayDate:'',checks:{}};
+  persist();renderAll();toast('⚠️ All data wiped');
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────
+function switchTab(tab,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('panel-'+tab).classList.add('on');
+  btn.classList.add('on');
+  if(tab==='library') renderLib();
+  if(tab==='today') renderToday();
+}
+function setFilter(f,btn){
+  libFilter=f;
+  document.querySelectorAll('.filt').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderLib();
+}
+
+// ─── UTILS ────────────────────────────────────────────────────────────────
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+let _tt;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+document.getElementById('dateLine').textContent=
+  new Date().toLocaleDateString('en-CA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+hydrate();
+renderAll();
+</script>
 </body>
 </html>
