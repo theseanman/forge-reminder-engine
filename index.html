@@ -490,6 +490,48 @@ function checkIt(id,v){
   const el=document.getElementById('ci_'+id);
   if(el) el.classList.toggle('done',v);
   persist();
+  // If checking OFF (completing), remove from JSONBin so it doesn't reappear on next pull
+  if(v) syncDeleteToJsonbin(id);
+}
+
+async function syncDeleteToJsonbin(deletedId){
+  if(!S.masterKey) return; // no key = silent skip
+  try {
+    // Fetch current bin
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN}/latest`, {
+      headers: { 'X-Master-Key': S.masterKey }
+    });
+    if(!res.ok) return;
+    const json = await res.json();
+    const data = json.record ?? json;
+
+    // Get current strings and filter out the deleted item's text
+    const deletedReminder = S.reminders.find(r => r.id === deletedId);
+    if(!deletedReminder) return;
+    const deletedText = deletedReminder.text.toLowerCase().trim();
+
+    let strings = extractStrings(data);
+    const before = strings.length;
+    strings = strings.filter(s => s.toLowerCase().trim() !== deletedText);
+
+    if(strings.length === before) return; // wasn't in JSONBin, nothing to do
+
+    // Push updated list back
+    const payload = JSON.stringify({ week: strings.join('\n') });
+    await fetch(`https://api.jsonbin.io/v3/b/${BIN}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': S.masterKey,
+        'X-Bin-Versioning': 'false'
+      },
+      body: payload
+    });
+    toast('☁️ Synced deletion to JSONBin');
+  } catch(e) {
+    // Silent fail — local state is already correct
+    console.warn('JSONBin sync failed:', e.message);
+  }
 }
 function flipType(id){
   const r=S.reminders.find(r=>r.id===id);
