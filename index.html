@@ -494,35 +494,22 @@ function checkIt(id,v){
 }
 
 async function syncDeleteToJsonbin(deletedId){
-  // Routes via Cloudflare Worker — no master key needed in browser
+  // Tell the Worker to mark this item as completed
+  // Worker will filter it out on future Shortcut syncs
   try {
-    // Fetch current bin
-    const res = await fetch(`${WORKER_URL}/reminders`);
-    if(!res.ok) return;
-    const data = await res.json();
-
-    // Get current strings and filter out the deleted item's text
     const deletedReminder = S.reminders.find(r => r.id === deletedId);
     if(!deletedReminder) return;
-    const deletedText = deletedReminder.text.toLowerCase().trim();
 
-    let strings = extractStrings(data);
-    const before = strings.length;
-    strings = strings.filter(s => s.toLowerCase().trim() !== deletedText);
-
-    if(strings.length === before) return; // wasn't in JSONBin, nothing to do
-
-    // Push updated list back via Worker
-    const payload = JSON.stringify({ week: strings.join('\n') });
-    await fetch(`${WORKER_URL}/reminders`, {
+    const res = await fetch(`${WORKER_URL}/complete`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: payload
+      body: JSON.stringify({ text: deletedReminder.text })
     });
-    toast('☁️ Synced deletion to JSONBin');
+    if(res.ok) {
+      toast('\u2601\uFE0F Synced — won\'t reappear');
+    }
   } catch(e) {
-    // Silent fail — local state is already correct
-    console.warn('JSONBin sync failed:', e.message);
+    console.warn('Complete sync failed:', e.message);
   }
 }
 function flipType(id){
