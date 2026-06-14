@@ -253,7 +253,7 @@ const POOL_GROUPS = [
   { label: "🧠 Mind", keys: ["General Wisdom","Psycho-Cybernetics","Mindset & Identity","Stoicism","Life Philosophy"] },
   { label: "💪 Body", keys: ["Physical Performance","Sleep Science","Nutrition & Body Composition"] },
   { label: "🎯 Strategy", keys: ["Peterson","Donnelly","SBOS & Strategic Thinking","Productivity & Focus"] },
-  { label: "🌴 FORGE", keys: ["Summer of Sean","Morning Protocol","Evening Protocol","Mental Health & Resilience"] },
+  { label: "🌴 FORGE", keys: ["Morning Protocol","Evening Protocol","Mental Health & Resilience"] },
   { label: "❤️ People", keys: ["Relationships","Fatherhood","Teaching & Leadership","Self-Defense"] },
   { label: "💰 Finance", keys: ["Financial Intelligence","Huberman"] },
 ];
@@ -562,8 +562,9 @@ function toggleWisdom() {
 }
 
 function renderWisdomFeatured() {
-  // Show today's tip from "Summer of Sean" as the featured tip
-  const featuredPool = "Summer of Sean";
+  // Rotate through all pools by day of year
+  const allPoolNames = Object.keys(ADVICE_POOLS);
+  const featuredPool = allPoolNames[getDayOfYear() % allPoolNames.length];
   document.getElementById('wisdomFeaturedLabel').textContent = featuredPool;
   document.getElementById('wisdomFeaturedText').textContent = getDailyAdvice(featuredPool);
 }
