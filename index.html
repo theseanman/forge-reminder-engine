@@ -273,6 +273,7 @@ function getDailyAdvice(poolName) {
 // ─── STATE ────────────────────────────────────────────────────────────────
 const KEY = 'forge_re_v3';
 const BIN  = '6a1f705cda38895dfe7e4f97';
+const WORKER_URL = 'https://forge-input.yoseanreid.workers.dev';
 const TODAY = ()=> new Date().toISOString().slice(0,10);
 
 let S = {
@@ -350,9 +351,7 @@ async function pullJsonbin(){
   const type=document.getElementById('pullType').value;
   toast('☁️ Pulling from JSONBin…');
   try{
-    const res=await fetch(`https://api.jsonbin.io/v3/b/${BIN}/latest`,{
-      headers:{'X-Master-Key':S.masterKey}
-    });
+    const res=await fetch(`${WORKER_URL}/reminders`);
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const json=await res.json();
     const strings=extractStrings(json);
@@ -495,15 +494,12 @@ function checkIt(id,v){
 }
 
 async function syncDeleteToJsonbin(deletedId){
-  if(!S.masterKey) return; // no key = silent skip
+  // Routes via Cloudflare Worker — no master key needed in browser
   try {
     // Fetch current bin
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN}/latest`, {
-      headers: { 'X-Master-Key': S.masterKey }
-    });
+    const res = await fetch(`${WORKER_URL}/reminders`);
     if(!res.ok) return;
-    const json = await res.json();
-    const data = json.record ?? json;
+    const data = await res.json();
 
     // Get current strings and filter out the deleted item's text
     const deletedReminder = S.reminders.find(r => r.id === deletedId);
@@ -516,15 +512,11 @@ async function syncDeleteToJsonbin(deletedId){
 
     if(strings.length === before) return; // wasn't in JSONBin, nothing to do
 
-    // Push updated list back
+    // Push updated list back via Worker
     const payload = JSON.stringify({ week: strings.join('\n') });
-    await fetch(`https://api.jsonbin.io/v3/b/${BIN}`, {
+    await fetch(`${WORKER_URL}/reminders`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': S.masterKey,
-        'X-Bin-Versioning': 'false'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: payload
     });
     toast('☁️ Synced deletion to JSONBin');
