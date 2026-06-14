@@ -347,7 +347,7 @@ function ingest(strings, type){
 
 // ─── JSONBIN ──────────────────────────────────────────────────────────────
 async function pullJsonbin(){
-  if(!S.masterKey){ toast('⚠️ Save your master key first'); return; }
+  // Master key handled by Cloudflare Worker — no key needed in browser
   const type=document.getElementById('pullType').value;
   toast('☁️ Pulling from JSONBin…');
   try{
